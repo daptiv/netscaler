@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: netscaler
-# Library:: helper
+# Library:: utilities
 #
 # Copyright 2014, Daptiv
 #
