@@ -23,7 +23,7 @@ default_action :create
 attribute :servicegroupname, :kind_of => String, :required => true
 attribute :username, :kind_of => String, :required => true
 attribute :password, :kind_of => String, :required => true
-attribute :hostname, :kind_of => String, :required => true
+attribute :hostname, :kind_of => [String, Array], :required => true
 attribute :servicetype, :kind_of => String, :required => false, :default => nil
 attribute :cacheable, :kind_of => String, :required => false, :default => nil
 attribute :state, :kind_of => String, :required => false, :default => nil
