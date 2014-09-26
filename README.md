@@ -73,6 +73,56 @@ A collection of methods for CRUD operations on NetScaler
   </tr>
 </table>
 
+Library Classes
+===============
+
+Netscaler::Utilites
+-----------------
+A utility class used by Netscaler::Helper
+
+### Methods
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Vars</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><tt>check_if_resource_exists</tt></td>
+    <td>resource_type, resource, value=nil</td>
+    <td>Make a get call to the netscaler</td>
+  </tr>
+  <tr>
+    <td><tt>build_request</tt></td>
+    <td>method, resource_type, resource, options</td>
+    <td>Create the rest call for the netscaler</td>
+  </tr>
+  <tr>
+    <td><tt>find_primary</tt></td>
+    <td>method, resource_type, resource, options</td>
+    <td>Given an array of options, find the primary Netscaler</td>
+  </tr>
+</table>
+
+### Examples
+    # New netscaler instance
+    netscaler = Netscaler::Utilities.new(
+      :hostname => ['Net1','Net2'],
+      :username => 'me',
+      :password => 'pass'
+    )
+
+    # Check if a resource exists
+    resource_exists = check_if_resource_exists('server','StarLord')
+
+    # GET request for server StarLord
+    request = build_request('get', resource_type, resource)
+    response = request.execute
+
+    # Find the primary netscaler given an array
+    primary = find_primary
+
 Resources/Providers
 ===================
 
@@ -126,7 +176,7 @@ netscaler_server
 
 ## TO DO
 
-* More/better testing (maybe build_request should be it's own class?)
+* More/better testing
 * Add more resource/providers
 
 ## Contributing

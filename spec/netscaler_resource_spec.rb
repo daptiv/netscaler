@@ -20,52 +20,78 @@ describe 'netscaler_resource' do
 
   let(:chef_run) { runner.converge('fixtures::netscaler_resource') }
 
-  it 'tries to create an existing resource' do
-    response = 'StarLord'
-    RestClient::Request.any_instance.stub(:execute).and_return(response)
-    resource = chef_run.netscaler_server('Create StarLord')
-
-    expect(resource.updated_by_last_action?).to be_false
+  before :all do
+    @netscaler = Netscaler::Utilities.new(
+      :username=>'user',
+      :password=>'pass',
+      :hostname=>'host')
   end
 
-  it 'tries to create a missing resource' do
-    response = 'Ronan'
-    RestClient::Request.any_instance.stub(:execute).and_return(response)
-    resource = chef_run.netscaler_server('Create StarLord')
-
-    expect(resource.updated_by_last_action?).to be_true
+  describe '#new' do
+    it 'takes a hash and returns a Netscaler::Utilities object' do
+      @netscaler.should be_an_instance_of Netscaler::Utilities
+    end
   end
 
-  it 'tries to delete an existing resource' do
-    response = 'Ronan'
-    RestClient::Request.any_instance.stub(:execute).and_return(response)
-    resource = chef_run.netscaler_server('Delete Ronan')
-
-    expect(resource.updated_by_last_action?).to be_true
+  describe '#hostname' do
+    it 'returns the correct hostname' do
+      @netscaler.hostname.should eql 'host'
+    end
   end
 
-  it 'tries to delete a missing resource' do
-    response = 'StarLord'
-    RestClient::Request.any_instance.stub(:execute).and_return(response)
-    resource = chef_run.netscaler_server('Delete Ronan')
-
-    expect(resource.updated_by_last_action?).to be_false
+  describe '#username' do
+    it 'returns the correct username' do
+      @netscaler.username.should eql 'user'
+    end
   end
 
-  it 'tries to update an existing resource' do
-    response = 'Rocket'
-    RestClient::Request.any_instance.stub(:execute).and_return(response)
-    resource = chef_run.netscaler_server('Update Rocket')
-
-    expect(resource.updated_by_last_action?).to be_true
+  describe '#password' do
+    it 'returns the correct password' do
+      @netscaler.password.should eql 'pass'
+    end
   end
 
-  it 'tries to update a missing resource' do
-    response = 'Rocket'
-    RestClient::Request.any_instance.stub(:execute).and_return(response)
-    resource = chef_run.netscaler_server('Update Rocket')
+  describe '#find_primary' do
+    it 'responds to the find_primary method' do
+      @netscaler.should respond_to(:find_primary)
+    end
+    xit 'returns the primary hostname' do
+    end
+    xit 'errors if no primary found' do
+    end
+  end
 
-    expect(resource.updated_by_last_action?).to be_true
+  describe '#check_if_resource_exists' do
+    it 'responds to check_if_resource_exists' do
+      @netscaler.should respond_to(:check_if_resource_exists)
+    end
+    xit 'confirms a resource exists' do
+    end
+    xit 'determines a resource does not exist' do
+    end
+  end
+
+  describe '#build_request' do
+    it 'responds to build_request' do
+      @netscaler.should respond_to(:build_request)
+    end
+    xit 'returns a string' do
+    end
+  end
+
+  describe '#create_resource' do
+    xit 'deletes a resource' do
+    end
+  end
+
+  describe '#update_resource' do
+    xit 'updates a resource' do
+    end
+  end
+
+  describe '#delete_resource' do
+    xit 'deletes a resource' do
+    end
   end
 
 end

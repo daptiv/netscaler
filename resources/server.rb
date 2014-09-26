@@ -23,7 +23,7 @@ default_action :create
 attribute :servername, :kind_of => String, :required => true
 attribute :username, :kind_of => String, :required => true
 attribute :password, :kind_of => String, :required => true
-attribute :hostname, :kind_of => String, :required => true
+attribute :hostname, :kind_of => [String, Array], :required => true
 attribute :state, :kind_of => String, :required => false, :default => nil
 attribute :domain, :kind_of => String, :required => false, :default => nil
 attribute :ipaddress, :kind_of => String, :required => false, :default => nil
