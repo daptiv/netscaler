@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.3
+Support for binding servers to service groups.
+
 ## 0.0.2:
 Support for HA.
 

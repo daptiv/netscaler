@@ -31,13 +31,16 @@ module Netscaler
       @password = options[:password]
     end
 
-    def check_if_resource_exists(resource_type, resource, value=nil)
+    def check_if_resource_exists(resource_type, resource, key=nil, value=nil)
       begin
-        request = build_request('get', resource_type, resource,
-          options = {})
+        request = build_request(
+          method: 'get',
+          resource_type: resource_type,
+          resource: resource
+        )
         response = request.execute()
       rescue RestClient::ResourceNotFound
-        puts "Resource #{ resource } not found in Netscaler"
+        Chef::Log.error "Resource #{ resource } not found in Netscaler"
         return false
       rescue RestClient::Unauthorized
         puts 'Netscaler refused credentials'
@@ -48,23 +51,59 @@ module Netscaler
       if value.nil?
         return true if response.include?(resource)
         Chef::Log.info "Resource #{ resource } not found in Netscaler"
-        false
+        return false
       else
-        value = "\"#{value}\"" if value.is_a?(String)
-        return true if response.include?("\"#{resource}\": #{value}")
-        false
+        keyval_search = JSON.parse(response)
+        keyval_search["#{resource_type}"].each do |it|
+          if it.has_value?("#{resource}")
+            return true if it["#{key}"].include?("#{value}")
+          end
+        end
+        return false
       end
+
     end
 
-    def build_request(method, resource_type, resource=nil, options = {})
+    def check_if_binding_exists(options = {})
+      bind_type = options[:bind_type]
+      resource_id = options[:resource_id]
+      bind_type_id = options[:bind_type_id]
+      begin
+        request = build_request(
+          method: 'get',
+          resource_type: bind_type,
+          resource: resource_id,
+          resource_id: bind_type_id,
+          binding: true
+        )
+        response = request.execute()
+      rescue RestClient::ResourceNotFound
+        msg = "Something's missing: resource_type=#{resource_type}, "
+        msg += " resource_id=#{resource_id}, or resource=#{resource}"
+        puts msg
+        return false
+      end
+
+      return true if response.include?(resource_id)
+      Chef::Log.debug "Binding #{resource} -> #{bind_type_id} not found in Netscaler"
+      return false
+
+    end
+
+    def build_request(options = {})
+      method = options[:method]
+      resource_type = options[:resource_type]
+      resource = options[:resource]
+      resource_id = options[:resource_id]
+      binding = options[:binding]
+      payload = options[:payload]
       headers = {}
-      payload = {}
+      newpayload = {}
       primary_hostname = find_primary
-      url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}"
-      url += "/#{resource}/" if method == 'put' || method == 'delete'
-      options_edited = options.reject { |k, v| v.nil? }
+      url = build_url(method, primary_hostname, resource_type, resource, resource_id, binding)
       unless method == 'get'
-        payload[:"#{resource_type}"] = options_edited
+        payload_edited = payload.reject { |k, v| v.nil? }
+        newpayload[:"#{resource_type}"] = payload_edited
         headers = {
           :content_type => "application/vnd.com.citrix.netscaler.#{resource_type}+json",
           :accept => :json }
@@ -75,9 +114,19 @@ module Netscaler
         :user => @username,
         :password => @password,
         :headers => headers,
-        :payload => payload.to_json
+        :payload => newpayload.to_json
       )
       request
+    end
+
+    def build_url(method, primary_hostname, resource_type, resource, resource_id,
+      binding)
+      url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}/#{resource}"
+      if binding == true
+        url += "/#{resource_id}" if method == 'get'
+        url += "?action=bind" if method == 'put'
+      end
+      return url
     end
 
     def find_primary
@@ -103,7 +152,7 @@ module Netscaler
       foo['hanode'].each do |i|
         return i['ipaddress'] if i['state'] == 'Primary'
       end
-      Chef::Application.fatal!('Unable to find a Primary Netscaler for HA...Exiting!')
+      Chef::Application.fatal!('Unable to find a Primary Netscaler for HA!')
     end
 
   end

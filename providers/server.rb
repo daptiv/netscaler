@@ -32,7 +32,8 @@ action :create do
     ipaddress: @new_resource.ipaddress,
     domainresolveretry: @new_resource.domainresolveretry,
     translationip: @new_resource.translationip,
-    translationmask: @new_resource.translationmask
+    translationmask: @new_resource.translationmask,
+    comment: @new_resource.comment
   )
   new_resource.updated_by_last_action(c)
 end
@@ -50,7 +51,8 @@ action :update do
     ipaddress: @new_resource.ipaddress,
     domainresolveretry: @new_resource.domainresolveretry,
     translationip: @new_resource.translationip,
-    translationmask: @new_resource.translationmask
+    translationmask: @new_resource.translationmask,
+    comment: @new_resource.comment
   )
   new_resource.updated_by_last_action(u)
 end
@@ -62,13 +64,7 @@ action :delete do
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
-    name: @new_resource.servername,
-    state: @new_resource.state,
-    domain: @new_resource.domain,
-    ipaddress: @new_resource.ipaddress,
-    domainresolveretry: @new_resource.domainresolveretry,
-    translationip: @new_resource.translationip,
-    translationmask: @new_resource.translationmask
+    name: @new_resource.servername
   )
   new_resource.updated_by_last_action(d)
 end

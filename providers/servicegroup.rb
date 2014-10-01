@@ -70,17 +70,28 @@ action :delete do
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
-    servicegroupname: @new_resource.servicegroupname,
-    state: @new_resource.state,
-    servicetype: @new_resource.servicetype,
-    cacheable: @new_resource.cacheable,
-    td: @new_resource.td,
-    cachetype: @new_resource.cachetype,
-    autoscale: @new_resource.autoscale,
-    monstate: @new_resource.monstate,
-    healthmonitor: @new_resource.healthmonitor,
-    appflowlog: @new_resource.appflowlog,
-    comment: @new_resource.comment
+    servicegroupname: @new_resource.servicegroupname
   )
   new_resource.updated_by_last_action(d)
+end
+
+action :bind do
+  b = bind_resource(
+    resource_type = 'servicegroup',
+    resource_id = 'servicegroupname',
+    bind_type = 'servicegroup_servicegroupmember_binding',
+    bind_type_id = 'servername',
+    bindto_key = 'name',
+    bindto_id = 'server',
+    hostname = @new_resource.hostname,
+    username = @new_resource.username,
+    password = @new_resource.password,
+    servicegroupname: @new_resource.servicegroupname,
+    servername: @new_resource.servername,
+    port: @new_resource.port,
+    weight: @new_resource.weight,
+    customserverid: @new_resource.customserverid,
+    hashid: @new_resource.hashid
+  )
+  new_resource.updated_by_last_action(b)
 end

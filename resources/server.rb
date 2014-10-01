@@ -30,3 +30,4 @@ attribute :ipaddress, :kind_of => String, :required => false, :default => nil
 attribute :domainresolveretry, :kind_of => Integer, :required => false, :default => nil
 attribute :translationip, :kind_of => String, :required => false, :default => nil
 attribute :translationmask, :kind_of => String, :required => false, :default => nil
+attribute :comment, :kind_of => String, :required => false, :default => nil
