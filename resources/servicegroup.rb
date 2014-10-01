@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-actions :create, :update, :delete
+actions :create, :update, :delete, :bind
 default_action :create
 
 attribute :servicegroupname, :kind_of => String, :required => true
@@ -34,3 +34,8 @@ attribute :monstate, :kind_of => String, :required => false, :default => nil
 attribute :healthmonitor, :kind_of => String, :required => false, :default => nil
 attribute :appflowlog, :kind_of => String, :required => false, :default => nil
 attribute :comment, :kind_of => String, :required => false, :default => nil
+attribute :servername, :kind_of => String, :required => false, :default => nil
+attribute :port, :kind_of => Integer, :required => false, :default => nil
+attribute :weight, :kind_of => String, :required => false, :default => nil
+attribute :customserverid, :kind_of => String, :required => false, :default => nil
+attribute :hashid, :kind_of => String, :required => false, :default => nil

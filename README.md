@@ -4,14 +4,13 @@
 
 A collection of resources for managing Citrix NetScaler (Nitro API).
 
-The Netscaler::Helper libary has been written in such a way as to allow each method to be
-called on it's own.  It's also been written so that adding a missing NetScaler resource
-*should* be easy.
+This has been written so that adding a missing NetScaler resource *should* be easy.
 
 Creating a new resource
 
 1.  All resources should have required attributes: hostname, username, password, and the resource name
-2.  All other attributes should default to nil.
+2.  All other attributes (payload for rest call) should default to nil.
+  1. Use http://\<netscaler_ip\>/nitro/v1/config/<resource_name> to see available payload options.
 
 Creating a new provider
 
@@ -19,6 +18,7 @@ Creating a new provider
   * :create - calls `create_resource`
   * :update - calls `update_resource`
   * :delete - calls `delete_resource`
+  * :bind   - calls `bind_resource`
 2.  Attributes in the payload should be passed in as a hash
 3.  `resource_type` should be the the feature that you're manipulating (ie server, lbvserver, etc)
 4.  `resource_id` should be set to the key of the resource (ie name, servicegroupname, etc)
@@ -53,23 +53,18 @@ A collection of methods for CRUD operations on NetScaler
   </tr>
   <tr>
     <td><tt>create_resource</tt></td>
-    <td>resource_type, resource_id, hostname, username, password, options = {}</td>
+    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
     <td>Make a post call to the netscaler</td>
   </tr>
   <tr>
     <td><tt>update_resource</tt></td>
-    <td>resource_type, resource_id, hostname, username, password, options = {}</td>
+    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
     <td>Make a put call to the netscaler</td>
   </tr>
   <tr>
     <td><tt>delete_resource</tt></td>
-    <td>resource_type, resource_id, hostname, username, password, options = {}</td>
+    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
     <td>Make a delete call to the netscaler</td>
-  </tr>
-  <tr>
-    <td><tt>build_request</tt></td>
-    <td>hostname, username, password, method, resource_type, resource=nil, options = {}</td>
-    <td>Create the rest call for the netscaler</td>
   </tr>
 </table>
 
@@ -91,45 +86,64 @@ A utility class used by Netscaler::Helper
   <tr>
     <td><tt>check_if_resource_exists</tt></td>
     <td>resource_type, resource, value=nil</td>
-    <td>Make a get call to the netscaler</td>
+    <td>Check if a resource exists</td>
+  </tr>
+  <tr>
+    <td><tt>check_if_binding_exists</tt></td>
+    <td>bind_type, resource_id, bind_type_id</td>
+    <td>Check if a binding exists</td>
   </tr>
   <tr>
     <td><tt>build_request</tt></td>
     <td>method, resource_type, resource, options</td>
-    <td>Create the rest call for the netscaler</td>
+    <td>Create the rest call</td>
+  </tr>
+  <tr>
+    <td><tt>build_url</tt></td>
+    <td>method, primary_hostname, resource_type, resource, resource_id, binding</td>
+    <td>Create the url used for the rest call</td>
   </tr>
   <tr>
     <td><tt>find_primary</tt></td>
-    <td>method, resource_type, resource, options</td>
+    <td>method, resource_type, resource, resource_id, binding, payload</tc>
     <td>Given an array of options, find the primary Netscaler</td>
   </tr>
 </table>
 
 ### Examples
     # New netscaler instance
-    netscaler = Netscaler::Utilities.new(
-      :hostname => ['Net1','Net2'],
-      :username => 'me',
-      :password => 'pass'
+    ns = Netscaler::Utilities.new(
+      :hostname => ['123.456.12.34','123.456.12.34'],
+      :username => 'iamgroot',
+      :password => 'iamgroot'
     )
 
-    # Check if a resource exists
-    resource_exists = check_if_resource_exists('server','StarLord')
+    # Check if a StarLord server exists
+    resource_exists = ns.check_if_resource_exists('server','StarLord')
+
+    # Check if StarLord server is UP in Guardians service group
+    server_up = ns.check_if_resource_exists(
+      'server_servicegroup_binding',
+      'StarLord',
+      'svrstate',
+      'UP'
+    )
 
     # GET request for server StarLord
-    request = build_request('get', resource_type, resource)
+    request = ns.build_request('get', 'server', 'StarLord')
     response = request.execute
 
+    # Build the rest request to get StarLord server info
+    url = ns.build_url('get', '123.456.12.34', 'server', 'StarLord')
+
     # Find the primary netscaler given an array
-    primary = find_primary
+    primary = ns.find_primary
 
 Resources/Providers
 ===================
 
 The idea here is that every rest call will eventually be represented with a new
-resource/provider.  There will be far too many to make examples for each so you'll
-need to examine each one's resource file to see what is accepted.  Below are a few
-examples to get you started though.
+resource/provider.  Below are a few examples to get you started.
 
 netscaler_server
 ----------------
@@ -145,8 +159,8 @@ netscaler_server
       servername 'StarLord'
       hostname '123.45.123.1'
       domainresolveretry 6
-      username 'nsroot'
-      password 'nsroot'
+      username 'iamgroot'
+      password 'iamgroot'
       domain 'mydomain.com'
       action :create
     end
@@ -156,8 +170,8 @@ netscaler_server
       servername 'StarLord'
       hostname '123.45.123.1'
       domainresolveretry 22
-      username 'nsroot'
-      password 'nsroot'
+      username 'iamgroot'
+      password 'iamgroot'
       action :update
     end
 
@@ -165,9 +179,41 @@ netscaler_server
     netscaler_server 'Delete StarLord' do
       servername 'StarLord'
       hostname '123.45.123.1'
-      username 'nsroot'
-      password 'nsroot'
+      username 'iamgroot'
+      password 'iamgroot'
       action :delete
+    end
+
+netscaler_servicegroup
+----------------------
+
+### Actions
+- :create: Create a resource
+- :update: Update an existing resource
+- :delete: Delete an existing resource
+- :bind: Bind one resource to another
+
+### Examples
+    # Create a service group called Guardians
+    netscaler_servicegroup 'Create Guardians' do
+      servicegroupname 'Guardians'
+      servicetype 'HTTP'
+      comment 'Something good, something bad'
+      hostname '123.45.123.1'
+      username 'iamgroot'
+      password 'iamgroot'
+      action :create
+    end
+
+    # Bind server StarLord to service group FannyUrAunt
+    netscaler_servicegroup 'Bind StarLord' do
+      hostname '172.16.198.2'
+      username 'iamgroot'
+      password 'iamgroot'
+      servicegroupname 'Guardians'
+      servername 'StarLord'
+      port 80
+      action :bind
     end
 
 ## List of created resources/providers

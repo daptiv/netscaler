@@ -71,6 +71,22 @@ describe 'netscaler_resource' do
     end
   end
 
+  describe '#check_if_binding_exists' do
+    it 'responds to check_if_binding_exists' do
+      @netscaler.should respond_to(:check_if_binding_exists)
+    end
+    xit 'confirms a resource exists' do
+    end
+    xit 'determines a resource does not exist' do
+    end
+  end
+
+  describe '#build_url' do
+    it 'responds to build_url' do
+      @netscaler.should respond_to(:build_url)
+    end
+  end
+
   describe '#build_request' do
     it 'responds to build_request' do
       @netscaler.should respond_to(:build_request)
@@ -80,17 +96,34 @@ describe 'netscaler_resource' do
   end
 
   describe '#create_resource' do
-    xit 'deletes a resource' do
+    it 'responds to create_resource' do
+      Netscaler::Helper.should respond_to(:create_resource)
+    end
+    xit 'creates a resource' do
     end
   end
 
   describe '#update_resource' do
+    it 'responds to update_resource' do
+      Netscaler::Helper.should respond_to(:update_resource)
+    end
     xit 'updates a resource' do
     end
   end
 
   describe '#delete_resource' do
+    xit 'responds to delete_resource' do
+      Netscaler::Helper.should respond_to(:delete_resource)
+    end
     xit 'deletes a resource' do
+    end
+  end
+
+  describe '#bind_resource' do
+    it 'responds to bind_resource' do
+      Netscaler::Helper.should respond_to(:bind_resource)
+    end
+    xit 'binds a resource' do
     end
   end
 
