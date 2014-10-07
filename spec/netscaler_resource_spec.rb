@@ -61,9 +61,9 @@ describe 'netscaler_resource' do
     end
   end
 
-  describe '#check_if_resource_exists' do
-    it 'responds to check_if_resource_exists' do
-      @netscaler.should respond_to(:check_if_resource_exists)
+  describe '#resource_exists?' do
+    it 'responds to resource_exists?' do
+      @netscaler.should respond_to(:resource_exists?)
     end
     xit 'confirms a resource exists' do
     end
@@ -71,9 +71,9 @@ describe 'netscaler_resource' do
     end
   end
 
-  describe '#check_if_binding_exists' do
-    it 'responds to check_if_binding_exists' do
-      @netscaler.should respond_to(:check_if_binding_exists)
+  describe '#binding_exists?' do
+    it 'responds to binding_exists?' do
+      @netscaler.should respond_to(:binding_exists?)
     end
     xit 'confirms a resource exists' do
     end

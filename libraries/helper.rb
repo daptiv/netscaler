@@ -24,7 +24,7 @@ module Netscaler
       created = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.check_if_resource_exists(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
 
       if resource_exists == false
         Chef::Log.info "Creating new #{resource_type}: #{payload[:"#{resource_id}"]}"
@@ -46,13 +46,13 @@ module Netscaler
       updated = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.check_if_resource_exists(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
       payload_edited = payload.reject { |k, v| v.nil? }
 
       unless resource_exists == false
         update_required = false
         payload_edited.each do |k, v|
-          key_value_exists = ns.check_if_resource_exists(resource_type, nil, k.to_s, v)
+          key_value_exists = ns.resource_exists?(resource_type, nil, k.to_s, v)
           update_required = true unless key_value_exists == true
         end
       end
@@ -73,7 +73,7 @@ module Netscaler
       deleted = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.check_if_resource_exists(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
 
       unless resource_exists == false
         request = ns.build_request(
@@ -95,15 +95,15 @@ module Netscaler
         :password => password)
 
       Chef::Log.debug "Ensuring existence of #{resource_type}: #{payload[:"#{resource_id}"]}"
-      resource1_exists = ns.check_if_resource_exists(resource_type, payload[:"#{resource_id}"])
+      resource1_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
 
       Chef::Log.debug "Ensuring existence of #{bindto_id}: #{payload[:"#{bind_type_id}"]}"
-      resource2_exists = ns.check_if_resource_exists(bindto_id, payload[:"#{bind_type_id}"])
+      resource2_exists = ns.resource_exists?(bindto_id, payload[:"#{bind_type_id}"])
 
       Chef::Log.debug "Checking existence of binding: #{resource_type}->\
         #{payload[:"#{resource_id}"]} AND #{bindto_id}->\
       #{payload[:"#{bind_type_id}"]}".split.join(" ")
-      binding_exists = ns.check_if_binding_exists(
+      binding_exists = ns.binding_exists?(
         bind_type: bind_type,
         resource_id: payload[:"#{resource_id}"],
         bind_type_id: payload[:"#{bind_type_id}"]

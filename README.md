@@ -47,7 +47,7 @@ A collection of methods for CRUD operations on NetScaler
     <th>Description</th>
   </tr>
   <tr>
-    <td><tt>check_if_resource_exists</tt></td>
+    <td><tt>resource_exists?</tt></td>
     <td>hostname, username, password, resource_type, resource, value=nil</td>
     <td>Make a get call to the netscaler</td>
   </tr>
@@ -84,12 +84,12 @@ A utility class used by Netscaler::Helper
     <th>Description</th>
   </tr>
   <tr>
-    <td><tt>check_if_resource_exists</tt></td>
+    <td><tt>resource_exists?</tt></td>
     <td>resource_type, resource, value=nil</td>
     <td>Check if a resource exists</td>
   </tr>
   <tr>
-    <td><tt>check_if_binding_exists</tt></td>
+    <td><tt>binding_exists?</tt></td>
     <td>bind_type, resource_id, bind_type_id</td>
     <td>Check if a binding exists</td>
   </tr>
@@ -119,10 +119,10 @@ A utility class used by Netscaler::Helper
     )
 
     # Check if a StarLord server exists
-    resource_exists = ns.check_if_resource_exists('server','StarLord')
+    resource_exists = ns.resource_exists?('server','StarLord')
 
     # Check if StarLord server is UP in Guardians service group
-    server_up = ns.check_if_resource_exists(
+    server_up = ns.resource_exists?(
       'server_servicegroup_binding',
       'StarLord',
       'svrstate',

@@ -31,7 +31,7 @@ module Netscaler
       @password = options[:password]
     end
 
-    def check_if_resource_exists(resource_type, resource, key=nil, value=nil)
+    def resource_exists?(resource_type, resource, key=nil, value=nil)
       begin
         request = build_request(
           method: 'get',
@@ -64,7 +64,7 @@ module Netscaler
 
     end
 
-    def check_if_binding_exists(options = {})
+    def binding_exists?(options = {})
       bind_type = options[:bind_type]
       resource_id = options[:resource_id]
       bind_type_id = options[:bind_type_id]
@@ -85,7 +85,7 @@ module Netscaler
       end
 
       return true if response.include?(resource_id)
-      Chef::Log.debug "Binding #{resource} -> #{bind_type_id} not found in Netscaler"
+      Chef::Log.debug "Binding #{resource_id} -> #{bind_type_id} not found in Netscaler"
       return false
 
     end
