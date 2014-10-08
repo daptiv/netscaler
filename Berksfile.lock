@@ -8,4 +8,4 @@ GRAPH
   chef_handler (1.1.6)
   minitest-handler (1.3.2)
     chef_handler (>= 0.0.0)
-  netscaler (0.0.4)
+  netscaler (0.0.5)
