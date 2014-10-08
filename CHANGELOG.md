@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.5
+Add missing matcher for :bind action.
+
 ## 0.0.4
 Refactor check methods to be more ruby-like.
 
