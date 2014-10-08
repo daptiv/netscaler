@@ -47,11 +47,6 @@ A collection of methods for CRUD operations on NetScaler
     <th>Description</th>
   </tr>
   <tr>
-    <td><tt>resource_exists?</tt></td>
-    <td>hostname, username, password, resource_type, resource, value=nil</td>
-    <td>Make a get call to the netscaler</td>
-  </tr>
-  <tr>
     <td><tt>create_resource</tt></td>
     <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
     <td>Make a post call to the netscaler</td>
