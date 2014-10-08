@@ -25,4 +25,8 @@ if defined?(ChefSpec)
   def delete_netscaler_servicegroup(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netscaler_servicegroup, :delete, resource_name)
   end
+
+  def bind_netscaler_servicegroup(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netscaler_servicegroup, :bind, resource_name)
+  end
 end
