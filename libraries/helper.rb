@@ -95,10 +95,10 @@ module Netscaler
         :password => password)
 
       Chef::Log.debug "Ensuring existence of #{resource_type}: #{payload[resource_id.to_sym]}"
-      resource1_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
+      primary_resource_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
 
       Chef::Log.debug "Ensuring existence of #{bindto_id}: #{payload[bind_type_id.to_sym]}"
-      resource2_exists = ns.resource_exists?(bindto_id, payload[bind_type_id.to_sym])
+      secondary_resource_exists = ns.resource_exists?(bindto_id, payload[bind_type_id.to_sym])
 
       Chef::Log.debug "Checking existence of binding: #{resource_type}->\
         #{payload[resource_id.to_sym]} AND #{bindto_id}->\
@@ -109,7 +109,7 @@ module Netscaler
         bind_type_id: payload[bind_type_id.to_sym]
       )
 
-      unless resource1_exists == false || resource2_exists == false || binding_exists
+      unless !primary_resource_exists || !secondary_resource_exists || binding_exists
         Chef::Log.info "Setting binding for: #{resource_type}->\
           #{payload[resource_id.to_sym]} AND #{bindto_id}->\
         #{payload[bind_type_id.to_sym]}".split.join(" ")
