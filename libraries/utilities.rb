@@ -131,22 +131,21 @@ module Netscaler
 
     def find_primary
       resp = nil
-      if @hostname.kind_of? Array
-        @hostname.each do |name|
-          Chef::Log.info "Attempting to connect to #{name}..."
-          begin
-            resp = RestClient.get("http://#{@username}:#{@password}@#{name}/nitro/v1/config/hanode",
-              { :accept => :json })
-            next
-          rescue
-            Chef::Log.info "Unable to connect to #{name}..."
-          end
-          break unless resp.nil?
-        end
+      hostname = if @hostname.kind_of? Array
+        @hostname
       else
-        resp =
-          RestClient.get("http://#{@username}:#{@password}@#{@hostname}/nitro/v1/config/hanode",
+        @hostname.split(',')
+      end
+      hostname.each do |name|
+        Chef::Log.info "Attempting to connect to #{name}..."
+        begin
+          resp = RestClient.get("http://#{@username}:#{@password}@#{name}/nitro/v1/config/hanode",
             { :accept => :json })
+          next
+        rescue
+          Chef::Log.info "Unable to connect to #{name}..."
+        end
+        break unless resp.nil?
       end
       foo = JSON.parse(resp)
       foo['hanode'].each do |i|
