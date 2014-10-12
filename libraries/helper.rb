@@ -26,7 +26,7 @@ module Netscaler
         :password => password)
       resource_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
 
-      if resource_exists == false
+      if !resource_exists
         Chef::Log.info "Creating new #{resource_type}: #{payload[resource_id.to_sym]}"
         request = ns.build_request(
           method: 'post',
@@ -49,14 +49,14 @@ module Netscaler
       resource_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
       payload_edited = payload.reject { |k, v| v.nil? }
 
-      unless resource_exists == false
+      unless !resource_exists
         update_required = false
         payload_edited.each do |k, v|
           key_value_exists = ns.resource_exists?(resource_type, nil, k.to_s, v)
-          update_required = true unless key_value_exists == true
+          update_required = true unless key_value_exists
         end
       end
-      if update_required == true
+      if update_required
         request = ns.build_request(
           method: 'put',
           resource_type: resource_type,
@@ -75,7 +75,7 @@ module Netscaler
         :password => password)
       resource_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
 
-      unless resource_exists == false
+      unless !resource_exists
         request = ns.build_request(
           method: 'delete',
           resource_type: resource_type,
@@ -109,7 +109,7 @@ module Netscaler
         bind_type_id: payload[bind_type_id.to_sym]
       )
 
-      unless resource1_exists == false || resource2_exists == false || binding_exists == true
+      unless resource1_exists == false || resource2_exists == false || binding_exists
         Chef::Log.info "Setting binding for: #{resource_type}->\
           #{payload[resource_id.to_sym]} AND #{bindto_id}->\
         #{payload[bind_type_id.to_sym]}".split.join(" ")

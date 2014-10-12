@@ -122,7 +122,7 @@ module Netscaler
     def build_url(method, primary_hostname, resource_type, resource, resource_id,
       binding)
       url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}/#{resource}"
-      if binding == true
+      if binding
         url += "/#{resource_id}" if method == 'get'
         url += "?action=bind" if method == 'put'
       end
