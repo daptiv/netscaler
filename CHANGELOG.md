@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.6
+- Use Chef::Log instead of puts.
+
 ## 0.0.5
 Add missing matcher for :bind action.
 

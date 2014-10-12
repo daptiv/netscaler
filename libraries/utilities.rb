@@ -40,12 +40,12 @@ module Netscaler
         )
         response = request.execute()
       rescue RestClient::ResourceNotFound
-        Chef::Log.error "Resource #{ resource } not found in Netscaler"
+        Chef::Log.info "Resource #{ resource } not found in Netscaler"
         return false
       rescue RestClient::Unauthorized
-        puts 'Netscaler refused credentials'
+        Chef::Log.error 'Netscaler refused credentials'
       rescue SocketError
-        puts "Couldn't connect to Netscaler at #{@hostname}"
+        Chef::Application.fatal! "Couldn't connect to Netscaler at #{@hostname}"
       end
 
       if value.nil?
@@ -80,7 +80,7 @@ module Netscaler
       rescue RestClient::ResourceNotFound
         msg = "Something's missing: resource_type=#{resource_type}, "
         msg += " resource_id=#{resource_id}, or resource=#{resource}"
-        puts msg
+        Chef::Log.info msg
         return false
       end
 
@@ -133,13 +133,13 @@ module Netscaler
       resp = nil
       if @hostname.kind_of? Array
         @hostname.each do |name|
-          puts "Attempting to connect to #{name}..."
+          Chef::Log.info "Attempting to connect to #{name}..."
           begin
             resp = RestClient.get("http://#{@username}:#{@password}@#{name}/nitro/v1/config/hanode",
               { :accept => :json })
             next
           rescue
-            puts "Unable to connect to #{name}..."
+            Chef::Log.info "Unable to connect to #{name}..."
           end
           break unless resp.nil?
         end
