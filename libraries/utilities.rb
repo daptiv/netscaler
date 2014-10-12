@@ -103,7 +103,7 @@ module Netscaler
       url = build_url(method, primary_hostname, resource_type, resource, resource_id, binding)
       unless method == 'get'
         payload_edited = payload.reject { |k, v| v.nil? }
-        newpayload[:"#{resource_type}"] = payload_edited
+        newpayload[resource_type.to_sym] = payload_edited
         headers = {
           :content_type => "application/vnd.com.citrix.netscaler.#{resource_type}+json",
           :accept => :json }

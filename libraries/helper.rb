@@ -24,10 +24,10 @@ module Netscaler
       created = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
 
       if resource_exists == false
-        Chef::Log.info "Creating new #{resource_type}: #{payload[:"#{resource_id}"]}"
+        Chef::Log.info "Creating new #{resource_type}: #{payload[resource_id.to_sym]}"
         request = ns.build_request(
           method: 'post',
           resource_type: resource_type,
@@ -37,7 +37,7 @@ module Netscaler
         response = request.execute()
         created = true
       else
-        Chef::Log.info "Resource #{payload[:"#{resource_id}"]} already exists on the netscaler."
+        Chef::Log.info "Resource #{payload[resource_id.to_sym]} already exists on the netscaler."
       end
       return created
     end
@@ -46,7 +46,7 @@ module Netscaler
       updated = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
       payload_edited = payload.reject { |k, v| v.nil? }
 
       unless resource_exists == false
@@ -60,7 +60,7 @@ module Netscaler
         request = ns.build_request(
           method: 'put',
           resource_type: resource_type,
-          resource: payload[:"#{resource_id}"],
+          resource: payload[resource_id.to_sym],
           payload: payload_edited
         )
         response = request.execute()
@@ -73,13 +73,13 @@ module Netscaler
       deleted = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
 
       unless resource_exists == false
         request = ns.build_request(
           method: 'delete',
           resource_type: resource_type,
-          resource: payload[:"#{resource_id}"],
+          resource: payload[resource_id.to_sym],
           payload: payload
         )
         response = request.execute()
@@ -94,29 +94,29 @@ module Netscaler
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
 
-      Chef::Log.debug "Ensuring existence of #{resource_type}: #{payload[:"#{resource_id}"]}"
-      resource1_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      Chef::Log.debug "Ensuring existence of #{resource_type}: #{payload[resource_id.to_sym]}"
+      resource1_exists = ns.resource_exists?(resource_type, payload[resource_id.to_sym])
 
-      Chef::Log.debug "Ensuring existence of #{bindto_id}: #{payload[:"#{bind_type_id}"]}"
-      resource2_exists = ns.resource_exists?(bindto_id, payload[:"#{bind_type_id}"])
+      Chef::Log.debug "Ensuring existence of #{bindto_id}: #{payload[bind_type_id.to_sym]}"
+      resource2_exists = ns.resource_exists?(bindto_id, payload[bind_type_id.to_sym])
 
       Chef::Log.debug "Checking existence of binding: #{resource_type}->\
-        #{payload[:"#{resource_id}"]} AND #{bindto_id}->\
-      #{payload[:"#{bind_type_id}"]}".split.join(" ")
+        #{payload[resource_id.to_sym]} AND #{bindto_id}->\
+      #{payload[bind_type_id.to_sym]}".split.join(" ")
       binding_exists = ns.binding_exists?(
         bind_type: bind_type,
-        resource_id: payload[:"#{resource_id}"],
-        bind_type_id: payload[:"#{bind_type_id}"]
+        resource_id: payload[resource_id.to_sym],
+        bind_type_id: payload[bind_type_id.to_sym]
       )
 
       unless resource1_exists == false || resource2_exists == false || binding_exists == true
         Chef::Log.info "Setting binding for: #{resource_type}->\
-          #{payload[:"#{resource_id}"]} AND #{bindto_id}->\
-        #{payload[:"#{bind_type_id}"]}".split.join(" ")
+          #{payload[resource_id.to_sym]} AND #{bindto_id}->\
+        #{payload[bind_type_id.to_sym]}".split.join(" ")
         request = ns.build_request(
           method: 'put',
           resource_type: bind_type,
-          resource: payload[:"#{bind_type_id}"],
+          resource: payload[bind_type_id.to_sym],
           binding: true,
           payload: payload
         )
