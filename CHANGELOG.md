@@ -3,7 +3,14 @@
 This file is used to list changes made in each version of netscaler.
 
 ## 0.0.6
-- Use Chef::Log instead of puts.
+- Version bump
+- Updated logging
+- Find_primary method should just convert to array if string instead of big if/else
+- Use .to_sym method instead of string interpolation
+- Updated 'If' and 'unless' blocks to be more succinct
+- Renamed resource1/2 to primary/secondary_resource
+- Separated logic for key value check into own method
+- Updated README to reflect refactor
 
 ## 0.0.5
 Add missing matcher for :bind action.
