@@ -61,12 +61,12 @@ module Netscaler
       )
       response = request.execute()
       keyval_search = JSON.parse(response)
-      keyval_search["#{resource_type}"].each do |it|
-        if it.has_value?("#{resource}")
-          if it["#{key}"].is_a? Integer
-            return true if it["#{key}"] == value
+      keyval_search[resource_type].each do |it|
+        if it.has_value?(resource)
+          if it[key].is_a? Integer
+            return true if it[key] == value
           else
-            return true if it["#{key}"].include?("#{value}")
+            return true if it[key].include?(value)
           end
         end
       end
@@ -133,7 +133,7 @@ module Netscaler
       url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}/#{resource}"
       if binding
         url += "/#{resource_id}" if method == 'get'
-        url += "?action=bind" if method == 'put'
+        url += '?action=bind' if method == 'put'
       end
       return url
     end

@@ -102,7 +102,7 @@ module Netscaler
 
       Chef::Log.debug "Checking existence of binding: #{resource_type}->\
         #{payload[resource_id.to_sym]} AND #{bindto_id}->\
-      #{payload[bind_type_id.to_sym]}".split.join(" ")
+      #{payload[bind_type_id.to_sym]}".split.join(' ')
       binding_exists = ns.binding_exists?(
         bind_type: bind_type,
         resource_id: payload[resource_id.to_sym],
@@ -112,7 +112,7 @@ module Netscaler
       unless !primary_resource_exists || !secondary_resource_exists || binding_exists
         Chef::Log.info "Setting binding for: #{resource_type}->\
           #{payload[resource_id.to_sym]} AND #{bindto_id}->\
-        #{payload[bind_type_id.to_sym]}".split.join(" ")
+        #{payload[bind_type_id.to_sym]}".split.join(' ')
         request = ns.build_request(
           method: 'put',
           resource_type: bind_type,
