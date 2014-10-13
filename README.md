@@ -80,8 +80,13 @@ A utility class used by Netscaler::Helper
   </tr>
   <tr>
     <td><tt>resource_exists?</tt></td>
-    <td>resource_type, resource, value=nil</td>
+    <td>resource_type, resource</td>
     <td>Check if a resource exists</td>
+  </tr>
+  <tr>
+    <td><tt>key_value_exists?</tt></td>
+    <td>resource_type, resource, key, value</td>
+    <td>Check if a key/value exists</td>
   </tr>
   <tr>
     <td><tt>binding_exists?</tt></td>
@@ -115,6 +120,9 @@ A utility class used by Netscaler::Helper
 
     # Check if a StarLord server exists
     resource_exists = ns.resource_exists?('server','StarLord')
+
+    # Check if a key/value exists
+    key_value_exists = ns.key_value_exists?('server','StarLord','comment','iamgroot')
 
     # Check if StarLord server is UP in Guardians service group
     server_up = ns.resource_exists?(
