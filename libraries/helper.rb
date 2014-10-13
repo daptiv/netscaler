@@ -52,7 +52,7 @@ module Netscaler
       unless !resource_exists
         update_required = false
         payload_edited.any? do |k, v|
-          key_value_exists = ns.resource_exists?(resource_type, nil, k.to_s, v)
+          key_value_exists = ns.key_value_exists?(resource_type, payload[resource_id.to_sym], k, v)
           update_required = true unless key_value_exists
         end
       end

@@ -31,7 +31,7 @@ module Netscaler
       @password = options[:password]
     end
 
-    def resource_exists?(resource_type, resource, key=nil, value=nil)
+    def resource_exists?(resource_type, resource)
       begin
         request = build_request(
           method: 'get',
@@ -48,20 +48,29 @@ module Netscaler
         Chef::Application.fatal! "Couldn't connect to Netscaler at #{@hostname}"
       end
 
-      if value.nil?
-        return true if response.include?(resource)
-        Chef::Log.info "Resource #{ resource } not found in Netscaler"
-        return false
-      else
-        keyval_search = JSON.parse(response)
-        keyval_search["#{resource_type}"].each do |it|
-          if it.has_value?("#{resource}")
+      return true if response.include?(resource)
+      Chef::Log.info "Resource #{ resource } not found in Netscaler"
+      return false
+    end
+
+    def key_value_exists?(resource_type, resource, key=nil, value=nil)
+      request = build_request(
+        method: 'get',
+        resource_type: resource_type,
+        resource: resource
+      )
+      response = request.execute()
+      keyval_search = JSON.parse(response)
+      keyval_search["#{resource_type}"].each do |it|
+        if it.has_value?("#{resource}")
+          if it["#{key}"].is_a? Integer
+            return true if it["#{key}"] == value
+          else
             return true if it["#{key}"].include?("#{value}")
           end
         end
-        return false
       end
-
+      return false
     end
 
     def binding_exists?(options = {})
