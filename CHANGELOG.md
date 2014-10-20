@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.7
+- Bug Fix: find_primary method breaks when password has '@' symbol.
+
 ## 0.0.6
 - Version bump
 - Updated logging
