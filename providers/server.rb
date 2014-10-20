@@ -22,7 +22,7 @@ include Netscaler::Helper
 action :create do
   c = create_resource(
     resource_type = 'server',
-    resource_id = 'name',
+    resource_id = :name,
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
@@ -41,7 +41,7 @@ end
 action :update do
   u = update_resource(
     resource_type = 'server',
-    resource_id = 'name',
+    resource_id = :name,
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
@@ -60,7 +60,7 @@ end
 action :delete do
   d = delete_resource(
     resource_type = 'server',
-    resource_id = 'name',
+    resource_id = :name,
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
