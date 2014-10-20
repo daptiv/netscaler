@@ -22,7 +22,7 @@ include Netscaler::Helper
 action :create do
   c = create_resource(
     resource_type = 'servicegroup',
-    resource_id = 'servicegroupname',
+    resource_id = :servicegroupname,
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
@@ -44,7 +44,7 @@ end
 action :update do
   u = update_resource(
     resource_type = 'servicegroup',
-    resource_id = 'servicegroupname',
+    resource_id = :servicegroupname,
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
@@ -66,7 +66,7 @@ end
 action :delete do
   d = delete_resource(
     resource_type = 'servicegroup',
-    resource_id = 'servicegroupname',
+    resource_id = :servicegroupname,
     hostname = @new_resource.hostname,
     username = @new_resource.username,
     password = @new_resource.password,
@@ -78,9 +78,9 @@ end
 action :bind do
   b = bind_resource(
     resource_type = 'servicegroup',
-    resource_id = 'servicegroupname',
+    resource_id = :servicegroupname,
     bind_type = 'servicegroup_servicegroupmember_binding',
-    bind_type_id = 'servername',
+    bind_type_id = :servername,
     bindto_key = 'name',
     bindto_id = 'server',
     hostname = @new_resource.hostname,

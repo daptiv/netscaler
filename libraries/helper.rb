@@ -24,10 +24,10 @@ module Netscaler
       created = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[resource_id])
 
-      if resource_exists == false
-        Chef::Log.info "Creating new #{resource_type}: #{payload[:"#{resource_id}"]}"
+      if !resource_exists
+        Chef::Log.info "Creating new #{resource_type}: #{payload[resource_id]}"
         request = ns.build_request(
           method: 'post',
           resource_type: resource_type,
@@ -37,7 +37,7 @@ module Netscaler
         response = request.execute()
         created = true
       else
-        Chef::Log.info "Resource #{payload[:"#{resource_id}"]} already exists on the netscaler."
+        Chef::Log.info "Resource #{payload[resource_id]} already exists on the netscaler."
       end
       return created
     end
@@ -46,21 +46,21 @@ module Netscaler
       updated = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[resource_id])
       payload_edited = payload.reject { |k, v| v.nil? }
 
-      unless resource_exists == false
+      if resource_exists
         update_required = false
-        payload_edited.each do |k, v|
-          key_value_exists = ns.resource_exists?(resource_type, nil, k.to_s, v)
-          update_required = true unless key_value_exists == true
+        payload_edited.any? do |k, v|
+          key_value_exists = ns.key_value_exists?(resource_type, payload[resource_id], k, v)
+          update_required = true unless key_value_exists
         end
       end
-      if update_required == true
+      if update_required
         request = ns.build_request(
           method: 'put',
           resource_type: resource_type,
-          resource: payload[:"#{resource_id}"],
+          resource: payload[resource_id],
           payload: payload_edited
         )
         response = request.execute()
@@ -73,13 +73,13 @@ module Netscaler
       deleted = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      resource_exists = ns.resource_exists?(resource_type, payload[resource_id])
 
-      unless resource_exists == false
+      unless !resource_exists
         request = ns.build_request(
           method: 'delete',
           resource_type: resource_type,
-          resource: payload[:"#{resource_id}"],
+          resource: payload[resource_id],
           payload: payload
         )
         response = request.execute()
@@ -90,40 +90,40 @@ module Netscaler
 
     def bind_resource(resource_type, resource_id, bind_type, bind_type_id, bindto_key, bindto_id,
       hostname, username, password, payload = {})
-      bound = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
 
-      Chef::Log.debug "Ensuring existence of #{resource_type}: #{payload[:"#{resource_id}"]}"
-      resource1_exists = ns.resource_exists?(resource_type, payload[:"#{resource_id}"])
+      unless ns.resource_exists?(resource_type, payload[resource_id])
+        Chef::Log.error "#{resource_type}: #{payload[resource_id]} doesn't exists on"\
+          " the netscaler!  Unable to bind it to #{bindto_id}: #{payload[bind_type_id]}!"
+        return false
+      end
 
-      Chef::Log.debug "Ensuring existence of #{bindto_id}: #{payload[:"#{bind_type_id}"]}"
-      resource2_exists = ns.resource_exists?(bindto_id, payload[:"#{bind_type_id}"])
+      unless ns.resource_exists?(bindto_id, payload[bind_type_id])
+        Chef::Log.error "#{bindto_id}: #{payload[bind_type_id]} doesn't exists on"\
+          " the netscaler!  Unable to bind it to #{resource_type}: #{payload[resource_id]}!"
+        return false
+      end
 
-      Chef::Log.debug "Checking existence of binding: #{resource_type}->\
-        #{payload[:"#{resource_id}"]} AND #{bindto_id}->\
-      #{payload[:"#{bind_type_id}"]}".split.join(" ")
       binding_exists = ns.binding_exists?(
         bind_type: bind_type,
-        resource_id: payload[:"#{resource_id}"],
-        bind_type_id: payload[:"#{bind_type_id}"]
+        resource_id: payload[resource_id],
+        bind_type_id: payload[bind_type_id]
       )
 
-      unless resource1_exists == false || resource2_exists == false || binding_exists == true
-        Chef::Log.info "Setting binding for: #{resource_type}->\
-          #{payload[:"#{resource_id}"]} AND #{bindto_id}->\
-        #{payload[:"#{bind_type_id}"]}".split.join(" ")
+      unless binding_exists
+        Chef::Log.info "Setting binding for: #{resource_type}->"\
+          "#{payload[resource_id]} AND #{bindto_id}->#{payload[bind_type_id]}".split.join(' ')
         request = ns.build_request(
           method: 'put',
           resource_type: bind_type,
-          resource: payload[:"#{bind_type_id}"],
+          resource: payload[bind_type_id],
           binding: true,
           payload: payload
-        )
-        response = request.execute()
-        bound = true
+        ).execute
+        return true
       end
-      return bound
+      return false
     end
 
   end

@@ -31,7 +31,7 @@ module Netscaler
       @password = options[:password]
     end
 
-    def resource_exists?(resource_type, resource, key=nil, value=nil)
+    def resource_exists?(resource_type, resource)
       begin
         request = build_request(
           method: 'get',
@@ -40,28 +40,46 @@ module Netscaler
         )
         response = request.execute()
       rescue RestClient::ResourceNotFound
-        Chef::Log.error "Resource #{ resource } not found in Netscaler"
-        return false
-      rescue RestClient::Unauthorized
-        puts 'Netscaler refused credentials'
-      rescue SocketError
-        puts "Couldn't connect to Netscaler at #{@hostname}"
-      end
-
-      if value.nil?
-        return true if response.include?(resource)
         Chef::Log.info "Resource #{ resource } not found in Netscaler"
         return false
-      else
-        keyval_search = JSON.parse(response)
-        keyval_search["#{resource_type}"].each do |it|
-          if it.has_value?("#{resource}")
-            return true if it["#{key}"].include?("#{value}")
-          end
-        end
-        return false
+      rescue RestClient::Unauthorized
+        Chef::Log.error 'Netscaler refused credentials'
+      rescue SocketError
+        Chef::Application.fatal! "Couldn't connect to Netscaler at #{@hostname}"
       end
 
+      return true if response.include?(resource)
+      Chef::Log.info "Resource #{ resource } not found in Netscaler"
+      return false
+    end
+
+    def key_value_exists?(resource_type, resource, key=nil, value=nil)
+      begin
+        request = build_request(
+          method: 'get',
+          resource_type: resource_type,
+          resource: resource
+        )
+        response = request.execute()
+      rescue RestClient::ResourceNotFound
+        Chef::Log.info "Resource #{ resource } not found in Netscaler"
+        return false
+      rescue RestClient::Unauthorized
+        Chef::Log.error 'Netscaler refused credentials'
+      rescue SocketError
+        Chef::Application.fatal! "Couldn't connect to Netscaler at #{@hostname}"
+      end
+      JSON.parse(response)[resource_type].each do |it|
+        if it.has_value?(resource)
+          it.each do |k, v|
+            if k == key
+              return true if v.is_a?(Integer) && v == value
+              return true if v.is_a?(String) && v.include?(value)
+            end
+          end
+        end
+      end
+      return false
     end
 
     def binding_exists?(options = {})
@@ -80,7 +98,7 @@ module Netscaler
       rescue RestClient::ResourceNotFound
         msg = "Something's missing: resource_type=#{resource_type}, "
         msg += " resource_id=#{resource_id}, or resource=#{resource}"
-        puts msg
+        Chef::Log.info msg
         return false
       end
 
@@ -103,7 +121,7 @@ module Netscaler
       url = build_url(method, primary_hostname, resource_type, resource, resource_id, binding)
       unless method == 'get'
         payload_edited = payload.reject { |k, v| v.nil? }
-        newpayload[:"#{resource_type}"] = payload_edited
+        newpayload[resource_type.to_sym] = payload_edited
         headers = {
           :content_type => "application/vnd.com.citrix.netscaler.#{resource_type}+json",
           :accept => :json }
@@ -122,31 +140,30 @@ module Netscaler
     def build_url(method, primary_hostname, resource_type, resource, resource_id,
       binding)
       url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}/#{resource}"
-      if binding == true
+      if binding
         url += "/#{resource_id}" if method == 'get'
-        url += "?action=bind" if method == 'put'
+        url += '?action=bind' if method == 'put'
       end
       return url
     end
 
     def find_primary
       resp = nil
-      if @hostname.kind_of? Array
-        @hostname.each do |name|
-          puts "Attempting to connect to #{name}..."
-          begin
-            resp = RestClient.get("http://#{@username}:#{@password}@#{name}/nitro/v1/config/hanode",
-              { :accept => :json })
-            next
-          rescue
-            puts "Unable to connect to #{name}..."
-          end
-          break unless resp.nil?
-        end
+      hostname = if @hostname.kind_of? Array
+        @hostname
       else
-        resp =
-          RestClient.get("http://#{@username}:#{@password}@#{@hostname}/nitro/v1/config/hanode",
+        @hostname.split(',')
+      end
+      hostname.each do |name|
+        Chef::Log.info "Attempting to connect to #{name}..."
+        begin
+          resp = RestClient.get("http://#{@username}:#{@password}@#{name}/nitro/v1/config/hanode",
             { :accept => :json })
+          next
+        rescue
+          Chef::Log.info "Unable to connect to #{name}..."
+        end
+        break unless resp.nil?
       end
       foo = JSON.parse(resp)
       foo['hanode'].each do |i|
