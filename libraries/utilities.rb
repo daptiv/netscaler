@@ -54,19 +54,28 @@ module Netscaler
     end
 
     def key_value_exists?(resource_type, resource, key=nil, value=nil)
-      request = build_request(
-        method: 'get',
-        resource_type: resource_type,
-        resource: resource
-      )
-      response = request.execute()
-      keyval_search = JSON.parse(response)
-      keyval_search[resource_type].each do |it|
+      begin
+        request = build_request(
+          method: 'get',
+          resource_type: resource_type,
+          resource: resource
+        )
+        response = request.execute()
+      rescue RestClient::ResourceNotFound
+        Chef::Log.info "Resource #{ resource } not found in Netscaler"
+        return false
+      rescue RestClient::Unauthorized
+        Chef::Log.error 'Netscaler refused credentials'
+      rescue SocketError
+        Chef::Application.fatal! "Couldn't connect to Netscaler at #{@hostname}"
+      end
+      JSON.parse(response)[resource_type].each do |it|
         if it.has_value?(resource)
-          if it[key].is_a? Integer
-            return true if it[key] == value
-          else
-            return true if it[key].include?(value)
+          it.each do |k, v|
+            if k == key
+              return true if v.is_a?(Integer) && v == value
+              return true if v.is_a?(String) && v.include?(value)
+            end
           end
         end
       end
