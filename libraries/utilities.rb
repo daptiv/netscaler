@@ -157,8 +157,12 @@ module Netscaler
       hostname.each do |name|
         Chef::Log.info "Attempting to connect to #{name}..."
         begin
-          resp = RestClient.get("http://#{@username}:#{@password}@#{name}/nitro/v1/config/hanode",
-            { :accept => :json })
+          resp = RestClient::Request.new(
+            :method => 'get',
+            :url => "http://#{name}/nitro/v1/config/hanode",
+            :user => @username,
+            :password => @password
+          ).execute()
           next
         rescue
           Chef::Log.info "Unable to connect to #{name}..."
