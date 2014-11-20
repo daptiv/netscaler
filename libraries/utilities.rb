@@ -164,8 +164,10 @@ module Netscaler
             :password => @password
           ).execute()
           next
-        rescue
+        rescue Exception => e
           Chef::Log.info "Unable to connect to #{name}..."
+          Chef::Log.info 'Error info:'
+          Chef::Log.info "#{e.inspect}"
         end
         break unless resp.nil?
       end
