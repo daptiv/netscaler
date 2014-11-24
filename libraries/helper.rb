@@ -126,5 +126,48 @@ module Netscaler
       return false
     end
 
+    def save_changes(hostname, username, password, payload = {})
+      saved = false
+      ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
+        :password => password)
+
+        Chef::Log.info "Committing configuration changes"
+        request = ns.build_request(
+          method: 'post',
+          resource_type: resource_type,
+          binding: false,
+          payload: payload
+        )
+        response = request.execute()
+        if response == "200 OK"
+          saved = true
+        end
+      else
+        Chef::Log.info "Saving configuration failed on #{hostname}."
+      end
+      return saved
+    end
+
+    def logout(hostname, username, password, payload = {})
+      logged_out = false
+      ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
+        :password => password)
+
+      Chef::Log.info "Logging out of #{hostname}"
+      request = ns.build_request(
+        method: 'post',
+        resource_type: resource_type,
+        binding: false,
+        payload: payload
+      )
+      response = request.execute()
+      if response == "201 Created"
+        logged_out = true
+      else
+        Chef::Log.info "Failed to log out of the netscaler #{hostname}."
+      end
+      return logged_out
+    end
+
   end
 end
