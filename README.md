@@ -19,6 +19,8 @@ Creating a new provider
   * :update - calls `update_resource`
   * :delete - calls `delete_resource`
   * :bind   - calls `bind_resource`
+  * :save   - calls `save_resource`
+  * :logout   - calls `logout_resource`
 2.  Attributes in the payload should be passed in as a hash
 3.  `resource_type` should be the the feature that you're manipulating (ie server, lbvserver, etc)
 4.  `resource_id` should be set to the key of the resource (ie name, servicegroupname, etc)
@@ -60,6 +62,16 @@ A collection of methods for CRUD operations on NetScaler
     <td><tt>delete_resource</tt></td>
     <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
     <td>Make a delete call to the netscaler</td>
+  </tr>
+  <tr>
+    <td><tt>save_resource</tt></td>
+    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
+    <td>Save the cofiguration on the netscaler</td>
+  </tr>
+  <tr>
+    <td><tt>logout_resource</tt></td>
+    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
+    <td>Log out of the netscaler</td>
   </tr>
 </table>
 
@@ -221,9 +233,41 @@ netscaler_servicegroup
       action :bind
     end
 
+netscaler_nsconfig
+----------------------
+
+### Actions
+- :save: Save netscaler configuration
+
+### Examples
+    # Commit changes to the netscaler config
+    netscaler_nsconfig 'save' do
+      hostname '123.45.123.1'
+      username 'iamgroot'
+      password 'iamgroot'
+      action :save
+    end
+
+netscaler_logout
+----------------------
+
+### Actions
+- :logout: Save netscaler configuration
+
+### Examples
+    # Log out of the netscaler
+    netscaler_logout 'logout' do
+      hostname '123.45.123.1'
+      username 'iamgroot'
+      password 'iamgroot'
+      action :logout
+    end
+
 ## List of created resources/providers
 * netscaler_server
 * netscaler_servicegroup
+* netscaler_nsconfig
+* netscaler_logout
 
 ## TO DO
 
