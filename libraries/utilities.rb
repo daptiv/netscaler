@@ -102,7 +102,7 @@ module Netscaler
         return false
       end
 
-      return true if response.include?(resource_id)
+      return true if response.include?(bind_type_id)
       Chef::Log.debug "Binding #{resource_id} -> #{bind_type_id} not found in Netscaler"
       return false
 

@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.9
+- Bug Fix: binding now binds all servers to servicegroups instead of just the first
+
+## 0.0.8
+- Better exception handling
+
 ## 0.0.7
 - Bug Fix: find_primary method breaks when password has '@' symbol.
 
