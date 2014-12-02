@@ -121,10 +121,8 @@ module Netscaler
         Chef::Log.info "Setting binding for: #{resource_type}->"\
           "#{payload[resource_id]} AND #{bindto_id}->#{payload[bind_type_id]}".split.join(' ')
         request = ns.build_request(
-          method: 'put',
-          resource_type: bind_type,
-          resource: payload[bind_type_id],
-          binding: true,
+          method: 'put', resource_type: bind_type,
+          resource: payload[bind_type_id], binding: true,
           payload: payload
         ).execute
         ns.save_config
