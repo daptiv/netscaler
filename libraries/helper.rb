@@ -35,6 +35,8 @@ module Netscaler
           payload: payload
         )
         response = request.execute()
+        ns.save_config
+        ns.logout
         created = true
       else
         Chef::Log.info "Resource #{payload[resource_id]} already exists on the netscaler."
@@ -64,6 +66,8 @@ module Netscaler
           payload: payload_edited
         )
         response = request.execute()
+        ns.save_config
+        ns.logout
         updated = true
       end
       return updated
@@ -83,6 +87,8 @@ module Netscaler
           payload: payload
         )
         response = request.execute()
+        ns.save_config
+        ns.logout
         deleted = true
       end
       return deleted
@@ -115,12 +121,12 @@ module Netscaler
         Chef::Log.info "Setting binding for: #{resource_type}->"\
           "#{payload[resource_id]} AND #{bindto_id}->#{payload[bind_type_id]}".split.join(' ')
         request = ns.build_request(
-          method: 'put',
-          resource_type: bind_type,
-          resource: payload[bind_type_id],
-          binding: true,
+          method: 'put', resource_type: bind_type,
+          resource: payload[bind_type_id], binding: true,
           payload: payload
         ).execute
+        ns.save_config
+        ns.logout
         return true
       end
       return false

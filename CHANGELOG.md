@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.10
+- Feature: save appliance configuration, logout
+
 ## 0.0.9
 - Bug Fix: binding now binds all servers to servicegroups instead of just the first
 

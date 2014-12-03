@@ -137,13 +137,13 @@ module Netscaler
       request
     end
 
-    def build_url(method, primary_hostname, resource_type, resource, resource_id,
-      binding)
-      url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}/#{resource}"
+    def build_url(method, primary_hostname, resource_type, resource, resource_id, binding)
+      url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}"
       if binding
-        url += "/#{resource_id}" if method == 'get'
-        url += '?action=bind' if method == 'put'
+        url += "/#{resource}/#{resource_id}" if method == 'get'
+        url += "/#{resource}?action=bind" if method == 'put'
       end
+      url += '?action=save' if resource_type == 'nsconfig'
       return url
     end
 
@@ -176,6 +176,22 @@ module Netscaler
         return i['ipaddress'] if i['state'] == 'Primary'
       end
       Chef::Application.fatal!('Unable to find a Primary Netscaler for HA!')
+    end
+
+    def save_config
+      build_request(
+        method: 'post',
+        resource_type: 'nsconfig',
+        payload: {}
+      ).execute()
+    end
+
+    def logout
+      build_request(
+        method: 'post',
+        resource_type: 'logout',
+        payload: {}
+      ).execute()
     end
 
   end

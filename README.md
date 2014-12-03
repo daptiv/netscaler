@@ -108,6 +108,16 @@ A utility class used by Netscaler::Helper
     <td>method, resource_type, resource, resource_id, binding, payload</tc>
     <td>Given an array of options, find the primary Netscaler</td>
   </tr>
+  <tr>
+    <td><tt>save_config</tt></td>
+    <td></tc>
+    <td>Save the netscaler configuration</td>
+  </tr>
+  <tr>
+    <td><tt>logout</tt></td>
+    <td></tc>
+    <td>Log out of the netscaler</td>
+  </tr>
 </table>
 
 ### Examples
@@ -143,6 +153,12 @@ A utility class used by Netscaler::Helper
 
     # Find the primary netscaler given an array
     primary = ns.find_primary
+
+    # Save the configuration file
+    ns.save_config
+
+    # Logout of the netscaler
+    ns.logout
 
 Resources/Providers
 ===================
