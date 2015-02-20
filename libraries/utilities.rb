@@ -17,6 +17,10 @@
 # limitations under the License.
 #
 
+# Chef 12 doesn't ship with rest-client
+# Make the gem available that we've vendored into this cookbook
+$:.unshift *Dir[File.expand_path('../../files/default/vendor/gems/**/lib', __FILE__)]
+
 require 'rest-client'
 require 'json'
 
