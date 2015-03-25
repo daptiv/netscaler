@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.11
+- Hotfix: vendor rest-client gem since it was pulled from Chef as a dep
+- Removed tailor from rakefile and added rubocop
+- Fixed a few minor rubocop issues
+- Version bump
+
 ## 0.0.10
 - Feature: save appliance configuration, logout
 
