@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.12
+- Hotfix: remove vendored gem as it causes `berks upload` failure
+- Now just loading gem to system in begin - rescue block, much simpler
+
 ## 0.0.11
 - Hotfix: vendor rest-client gem since it was pulled from Chef as a dep
 - Removed tailor from rakefile and added rubocop
