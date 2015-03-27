@@ -17,6 +17,13 @@
 # limitations under the License.
 #
 
+begin
+  gem 'rest-client'
+rescue LoadError
+  system('gem install rest-client')
+  Gem.clear_paths
+end
+
 require 'rest-client'
 require 'json'
 
