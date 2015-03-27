@@ -20,7 +20,7 @@
 begin
   gem 'rest-client'
 rescue LoadError
-  system('gem install rest-client')
+  system('gem install rest-client --no-document')
   Gem.clear_paths
 end
 
@@ -146,11 +146,16 @@ module Netscaler
 
     def build_url(method, primary_hostname, resource_type, resource, resource_id, binding)
       url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}"
+      if resource_type == 'nsconfig'
+        url += '?action=save' 
+        return url
+      end
       if binding
         url += "/#{resource}/#{resource_id}" if method == 'get'
         url += "/#{resource}?action=bind" if method == 'put'
+        return url
       end
-      url += '?action=save' if resource_type == 'nsconfig'
+      url += "/#{resource}"
       return url
     end
 
