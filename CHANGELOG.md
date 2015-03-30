@@ -5,6 +5,10 @@ This file is used to list changes made in each version of netscaler.
 ## 0.0.14
 - Feature: new monitor resource/provider
 
+## 0.0.13
+- Hotfix: fix url for update/delete actions in build_url method call
+- Add --no-document for faster rest-client gem install
+
 ## 0.0.12
 - Hotfix: remove vendored gem as it causes `berks upload` failure
 - Now just loading gem to system in begin - rescue block, much simpler

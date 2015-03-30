@@ -143,7 +143,7 @@ module Netscaler
     def build_url(method, primary_hostname, resource_type, resource, resource_id, binding)
       url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}"
       if resource_type == 'nsconfig'
-        url += '?action=save'
+        url += '?action=save' 
         return url
       end
       if binding
