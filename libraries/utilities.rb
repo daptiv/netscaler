@@ -20,7 +20,7 @@
 begin
   gem 'rest-client'
 rescue LoadError
-  system('gem install rest-client')
+  system('gem install rest-client --no-document')
   Gem.clear_paths
 end
 
@@ -89,10 +89,7 @@ module Netscaler
       return false
     end
 
-    def binding_exists?(options = {})
-      bind_type = options[:bind_type]
-      resource_id = options[:resource_id]
-      bind_type_id = options[:bind_type_id]
+    def binding_exists?(bind_type, resource_id, bind_type_id)
       begin
         request = build_request(
           method: 'get',
@@ -112,7 +109,6 @@ module Netscaler
       return true if response.include?(bind_type_id)
       Chef::Log.debug "Binding #{resource_id} -> #{bind_type_id} not found in Netscaler"
       return false
-
     end
 
     def build_request(options = {})
@@ -146,11 +142,16 @@ module Netscaler
 
     def build_url(method, primary_hostname, resource_type, resource, resource_id, binding)
       url = "http://#{primary_hostname}/nitro/v1/config/#{resource_type}"
+      if resource_type == 'nsconfig'
+        url += '?action=save'
+        return url
+      end
       if binding
         url += "/#{resource}/#{resource_id}" if method == 'get'
         url += "/#{resource}?action=bind" if method == 'put'
+        return url
       end
-      url += '?action=save' if resource_type == 'nsconfig'
+      url += "/#{resource}"
       return url
     end
 

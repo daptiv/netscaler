@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.14
+- Feature: new monitor resource/provider
+
 ## 0.0.12
 - Hotfix: remove vendored gem as it causes `berks upload` failure
 - Now just loading gem to system in begin - rescue block, much simpler

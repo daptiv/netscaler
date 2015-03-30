@@ -237,9 +237,39 @@ netscaler_servicegroup
       action :bind
     end
 
+netscaler_monitor
+----------------------
+
+### Actions
+- :create: Create a resource
+- :update: Update an existing resource
+- :bind: Bind one resource to another
+
+### Examples
+    # Create a monitor called Xandar
+    netscaler_monitor 'Create Xandar' do
+      monitorname 'Xandar'
+      type 'PING'
+      hostname '123.45.123.1'
+      username 'iamgroot'
+      password 'iamgroot'
+      action :create
+    end
+
+    # Bind server StarLord to service group FannyUrAunt
+    netscaler_monitor 'Bind Xandar' do
+      hostname '172.16.198.2'
+      username 'iamgroot'
+      password 'iamgroot'
+      monitorname 'Xandar'
+      servicegroupname 'Guardians'
+      action :bind
+    end
+
 ## List of created resources/providers
 * netscaler_server
 * netscaler_servicegroup
+* netscaler_monitor
 
 ## TO DO
 
