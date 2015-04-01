@@ -113,7 +113,17 @@ module Netscaler
           method: 'put', resource_type: bind_type,
           resource: payload[bind_type_id], binding: true,
           payload: payload
-        ).execute
+        )
+        # In some cases the binding_exists? method doesn't work because the url isn't
+        # built properly....so just catching the Conflict exception which indicates that
+        # the binding creation can't happen because it already exists.  Sucks I know...feel
+        # free to PR this cookbook!
+        begin
+          request.execute
+        rescue RestClient::Conflict
+          Chef::Log.info "Binding already exists. . . ."
+          return false
+        end
         ns.save_config
         ns.logout
         return true

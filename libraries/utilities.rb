@@ -100,8 +100,8 @@ module Netscaler
         )
         response = request.execute()
       rescue RestClient::ResourceNotFound
-        msg = "Something's missing: resource_type=#{resource_type}, "
-        msg += " resource_id=#{resource_id}, or resource=#{resource}"
+        msg = "Something's missing: bind_type=#{bind_type}, "
+        msg += " resource_id=#{resource_id}, or bind_type_id=#{bind_type_id}"
         Chef::Log.info msg
         return false
       end
