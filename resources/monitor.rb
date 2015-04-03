@@ -29,7 +29,7 @@ attribute :servicegroupname, :kind_of => String, :required => false, :default =>
 attribute :interval, :kind_of => Integer, :required => false, :default => nil
 attribute :units3, :kind_of => String, :required => false, :default => nil
 attribute :resptimeout, :kind_of => Integer, :required => false, :default => nil
-attribute :resptimeoutthresh, :kind_of => Integer, :required => false, :default => nil
+attribute :resptimeoutthresh, :kind_of => String, :required => false, :default => nil
 attribute :units4, :kind_of => String, :required => false, :default => nil
 attribute :destport, :kind_of => Integer, :required => false, :default => nil
 attribute :downtime, :kind_of => Integer, :required => false, :default => nil
