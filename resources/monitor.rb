@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-actions :create, :update, :delete, :bind
+actions :create, :update, :bind
 default_action :create
 
 attribute :monitorname, :kind_of => String, :required => true
