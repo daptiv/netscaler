@@ -72,16 +72,6 @@ describe 'netscaler_resource' do
     end
   end
 
-  describe '#binding_exists?' do
-    it 'responds to binding_exists?' do
-      @ns.should respond_to(:binding_exists?)
-    end
-    xit 'confirms a binding exists' do
-    end
-    xit 'determines a resource does not exist' do
-    end
-  end
-
   describe '#build_url' do
     before do
       Method = 'post'

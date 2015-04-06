@@ -106,29 +106,22 @@ module Netscaler
         return false
       end
 
-      unless ns.binding_exists?(bind_type,payload[resource_id],payload[bind_type_id])
-        Chef::Log.info "Setting binding for: #{resource_type}->"\
-          "#{payload[resource_id]} AND #{bindto_id}->#{payload[bind_type_id]}".split.join(' ')
-        request = ns.build_request(
-          method: 'put', resource_type: bind_type,
-          resource: payload[bind_type_id], binding: true,
-          payload: payload
-        )
-        # In some cases the binding_exists? method doesn't work because the url isn't
-        # built properly....so just catching the Conflict exception which indicates that
-        # the binding creation can't happen because it already exists.  Sucks I know...feel
-        # free to PR this cookbook!
-        begin
-          request.execute
-        rescue RestClient::Conflict
-          Chef::Log.info "Binding already exists. . . ."
-          return false
-        end
-        ns.save_config
-        ns.logout
-        return true
+      Chef::Log.info "Setting binding for: #{resource_type}->"\
+        "#{payload[resource_id]} AND #{bindto_id}->#{payload[bind_type_id]}".split.join(' ')
+      request = ns.build_request(
+        method: 'put', resource_type: bind_type,
+        resource: payload[bind_type_id], binding: true,
+        payload: payload
+      )
+      begin
+        request.execute
+      rescue RestClient::Conflict
+        Chef::Log.info "Binding already exists. . . ."
+        return false
       end
-      return false
+      ns.save_config
+      ns.logout
+      return true
     end
 
   end

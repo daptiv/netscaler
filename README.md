@@ -89,11 +89,6 @@ A utility class used by Netscaler::Helper
     <td>Check if a key/value exists</td>
   </tr>
   <tr>
-    <td><tt>binding_exists?</tt></td>
-    <td>bind_type, resource_id, bind_type_id</td>
-    <td>Check if a binding exists</td>
-  </tr>
-  <tr>
     <td><tt>build_request</tt></td>
     <td>method, resource_type, resource, options</td>
     <td>Create the rest call</td>

@@ -4,6 +4,7 @@ This file is used to list changes made in each version of netscaler.
 
 ## 0.0.14
 - Feature: new monitor resource/provider
+- Removed binding_exists? method
 
 ## 0.0.13
 - Hotfix: fix url for update/delete actions in build_url method call
