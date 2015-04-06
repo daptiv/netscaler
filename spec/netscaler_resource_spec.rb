@@ -21,39 +21,40 @@ describe 'netscaler_resource' do
   let(:chef_run) { runner.converge('fixtures::netscaler_resource') }
 
   before :all do
-    @netscaler = Netscaler::Utilities.new(
+    @ns = Netscaler::Utilities.new(
       :username=>'user',
       :password=>'pass',
       :hostname=>'host')
+    @primary_hostname = '123.45.67.890'
   end
 
   describe '#new' do
     it 'takes a hash and returns a Netscaler::Utilities object' do
-      @netscaler.should be_an_instance_of Netscaler::Utilities
+      @ns.should be_an_instance_of Netscaler::Utilities
     end
   end
 
   describe '#hostname' do
     it 'returns the correct hostname' do
-      @netscaler.hostname.should eql 'host'
+      @ns.hostname.should eql 'host'
     end
   end
 
   describe '#username' do
     it 'returns the correct username' do
-      @netscaler.username.should eql 'user'
+      @ns.username.should eql 'user'
     end
   end
 
   describe '#password' do
     it 'returns the correct password' do
-      @netscaler.password.should eql 'pass'
+      @ns.password.should eql 'pass'
     end
   end
 
   describe '#find_primary' do
     it 'responds to the find_primary method' do
-      @netscaler.should respond_to(:find_primary)
+      @ns.should respond_to(:find_primary)
     end
     xit 'returns the primary hostname' do
     end
@@ -63,17 +64,7 @@ describe 'netscaler_resource' do
 
   describe '#resource_exists?' do
     it 'responds to resource_exists?' do
-      @netscaler.should respond_to(:resource_exists?)
-    end
-    xit 'confirms a resource exists' do
-    end
-    xit 'determines a resource does not exist' do
-    end
-  end
-
-  describe '#binding_exists?' do
-    it 'responds to binding_exists?' do
-      @netscaler.should respond_to(:binding_exists?)
+      @ns.should respond_to(:resource_exists?)
     end
     xit 'confirms a resource exists' do
     end
@@ -82,14 +73,67 @@ describe 'netscaler_resource' do
   end
 
   describe '#build_url' do
-    it 'responds to build_url' do
-      @netscaler.should respond_to(:build_url)
+    before do
+      Method = 'post'
+      payload = {}
+      Base_url = 'http://123.45.67.890/nitro/v1/config'
+    end
+
+    context 'when the method is called' do
+      it 'responds to build_url' do
+        @ns.should respond_to(:build_url)
+      end
+      it 'returns a string' do
+        expect(@ns.build_url(1,2,3,4,5,6)).to be_a(String)
+      end
+    end
+
+    context 'when save_config calls it' do
+      it 'returns the correct url' do
+        expect(@ns.build_url(
+          Method,
+          @primary_hostname,
+          'nsconfig',
+          'server',
+          'StarLord',
+          'false'
+        )).to include(
+          "#{Base_url}/nsconfig?action=save"
+        )
+      end
+    end
+
+    context 'when binding is true' do
+      it 'returns the correct url with get method' do
+        expect(@ns.build_url(
+          'get',
+          @primary_hostname,
+          'servicegroup_servicegroupmember_binding',
+          'StarLord',
+          'Guardians',
+          'true'
+        )).to include(
+          "#{Base_url}/servicegroup_servicegroupmember_binding/StarLord/Guardians"
+        )
+      end
+      it 'retruns the correct url with put method' do
+        expect(@ns.build_url(
+          'put',
+          @primary_hostname,
+          'servicegroup_servicegroupmember_binding',
+          'StarLord',
+          'Guardians',
+          'true'
+        )).to include(
+          "#{Base_url}/servicegroup_servicegroupmember_binding/StarLord?action=bind"
+        )
+      end
     end
   end
 
   describe '#build_request' do
     it 'responds to build_request' do
-      @netscaler.should respond_to(:build_request)
+      @ns.should respond_to(:build_request)
     end
     xit 'returns a string' do
     end

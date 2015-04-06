@@ -1,6 +1,7 @@
 if defined?(ChefSpec)
   ChefSpec::Runner.define_runner_method :netscaler_server
   ChefSpec::Runner.define_runner_method :netscaler_servicegroup
+  ChefSpec::Runner.define_runner_method :netscaler_monitor
 
   def create_netscaler_server(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netscaler_server, :create, resource_name)
@@ -28,5 +29,17 @@ if defined?(ChefSpec)
 
   def bind_netscaler_servicegroup(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netscaler_servicegroup, :bind, resource_name)
+  end
+
+  def create_netscaler_monitor(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netscaler_monitor, :create, resource_name)
+  end
+
+  def update_netscaler_monitor(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netscaler_monitor, :update, resource_name)
+  end
+
+  def bind_netscaler_monitor(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:netscaler_monitor, :bind, resource_name)
   end
 end

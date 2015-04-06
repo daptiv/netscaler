@@ -89,32 +89,6 @@ module Netscaler
       return false
     end
 
-    def binding_exists?(options = {})
-      bind_type = options[:bind_type]
-      resource_id = options[:resource_id]
-      bind_type_id = options[:bind_type_id]
-      begin
-        request = build_request(
-          method: 'get',
-          resource_type: bind_type,
-          resource: resource_id,
-          resource_id: bind_type_id,
-          binding: true
-        )
-        response = request.execute()
-      rescue RestClient::ResourceNotFound
-        msg = "Something's missing: resource_type=#{resource_type}, "
-        msg += " resource_id=#{resource_id}, or resource=#{resource}"
-        Chef::Log.info msg
-        return false
-      end
-
-      return true if response.include?(bind_type_id)
-      Chef::Log.debug "Binding #{resource_id} -> #{bind_type_id} not found in Netscaler"
-      return false
-
-    end
-
     def build_request(options = {})
       method = options[:method]
       resource_type = options[:resource_type]

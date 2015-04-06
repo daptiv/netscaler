@@ -24,9 +24,8 @@ module Netscaler
       created = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[resource_id])
 
-      if !resource_exists
+      if !ns.resource_exists?(resource_type, payload[resource_id])
         Chef::Log.info "Creating new #{resource_type}: #{payload[resource_id]}"
         request = ns.build_request(
           method: 'post',
@@ -38,8 +37,6 @@ module Netscaler
         ns.save_config
         ns.logout
         created = true
-      else
-        Chef::Log.info "Resource #{payload[resource_id]} already exists on the netscaler."
       end
       return created
     end
@@ -48,10 +45,9 @@ module Netscaler
       updated = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[resource_id])
       payload_edited = payload.reject { |k, v| v.nil? }
 
-      if resource_exists
+      if ns.resource_exists?(resource_type, payload[resource_id])
         update_required = false
         payload_edited.any? do |k, v|
           key_value_exists = ns.key_value_exists?(resource_type, payload[resource_id], k, v)
@@ -77,9 +73,8 @@ module Netscaler
       deleted = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      resource_exists = ns.resource_exists?(resource_type, payload[resource_id])
 
-      unless !resource_exists
+      unless !ns.resource_exists?(resource_type, payload[resource_id])
         request = ns.build_request(
           method: 'delete',
           resource_type: resource_type,
@@ -111,25 +106,22 @@ module Netscaler
         return false
       end
 
-      binding_exists = ns.binding_exists?(
-        bind_type: bind_type,
-        resource_id: payload[resource_id],
-        bind_type_id: payload[bind_type_id]
+      Chef::Log.info "Setting binding for: #{resource_type}->"\
+        "#{payload[resource_id]} AND #{bindto_id}->#{payload[bind_type_id]}".split.join(' ')
+      request = ns.build_request(
+        method: 'put', resource_type: bind_type,
+        resource: payload[bind_type_id], binding: true,
+        payload: payload
       )
-
-      unless binding_exists
-        Chef::Log.info "Setting binding for: #{resource_type}->"\
-          "#{payload[resource_id]} AND #{bindto_id}->#{payload[bind_type_id]}".split.join(' ')
-        request = ns.build_request(
-          method: 'put', resource_type: bind_type,
-          resource: payload[bind_type_id], binding: true,
-          payload: payload
-        ).execute
-        ns.save_config
-        ns.logout
-        return true
+      begin
+        request.execute
+      rescue RestClient::Conflict
+        Chef::Log.info "Binding already exists. . . ."
+        return false
       end
-      return false
+      ns.save_config
+      ns.logout
+      return true
     end
 
   end
