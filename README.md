@@ -221,8 +221,8 @@ netscaler_servicegroup
       action :create
     end
 
-    # Bind server StarLord to service group FannyUrAunt
-    netscaler_servicegroup 'Bind StarLord' do
+    # Bind server StarLord to service group Guardians
+    netscaler_servicegroup 'Bind StarLord to Guardians' do
       hostname '172.16.198.2'
       username 'iamgroot'
       password 'iamgroot'
@@ -251,8 +251,8 @@ netscaler_monitor
       action :create
     end
 
-    # Bind server StarLord to service group FannyUrAunt
-    netscaler_monitor 'Bind Xandar' do
+    # Bind monitor Xandar to service group Guardians
+    netscaler_monitor 'Bind Xandar to Guardians' do
       hostname '172.16.198.2'
       username 'iamgroot'
       password 'iamgroot'
@@ -261,10 +261,43 @@ netscaler_monitor
       action :bind
     end
 
+netscaler_lbvserver
+----------------------
+
+### Actions
+- :create: Create a resource
+- :update: Update an existing resource
+- :delete: Delete an existing resource
+- :bind: Bind one resource to another
+
+### Examples
+    # Create a lb vserver called Kyln
+    netscaler_lbvserver 'Create Kyln' do
+      lbvservername 'Kyln'
+      ipaddress '123.45.123.100'
+      port 80
+      servicetype 'HTTP' 
+      hostname '123.45.123.1'
+      username 'iamgroot'
+      password 'iamgroot'
+      action :create
+    end
+
+    # Bind service group Guardians to lb vserver Kyln
+    netscaler_lbvserver 'Bind Guardians to Kyln' do
+      lbvservername 'Kyln'
+      servicegroupname 'Guardians'
+      hostname '123.45.123.1'
+      username 'iamgroot'
+      password 'iamgroot'
+      action :bind
+    end
+
 ## List of created resources/providers
 * netscaler_server
 * netscaler_servicegroup
 * netscaler_monitor
+* netscaler_lbvserver
 
 ## TO DO
 
