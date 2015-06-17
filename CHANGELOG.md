@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.0.15
+- Feature: new lbvserver resource/provider
+
 ## 0.0.14
 - Feature: new monitor resource/provider
 - Removed binding_exists? method
