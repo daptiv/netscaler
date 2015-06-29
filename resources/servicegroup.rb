@@ -39,3 +39,5 @@ attribute :port, :kind_of => Integer, :required => false, :default => nil
 attribute :weight, :kind_of => String, :required => false, :default => nil
 attribute :customserverid, :kind_of => String, :required => false, :default => nil
 attribute :hashid, :kind_of => String, :required => false, :default => nil
+attribute :cip, :kind_of => String, :required => false, :default => nil
+attribute :cipheader, :kind_of => String, :required => false, :default => nil
