@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 0.1.0
+- Feature: remove update action from all providers, create will update if necessary
+- Feature: allow cipheader value for servicegroup creation
+
 ## 0.0.15
 - Feature: new lbvserver resource/provider
 

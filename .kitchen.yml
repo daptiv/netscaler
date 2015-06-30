@@ -11,4 +11,6 @@ platforms:
 suites:
   - name: default
     run_list:
+      - recipe[netscaler::test_server]
+      - recipe[netscaler::test_servicegroup]
     attributes:

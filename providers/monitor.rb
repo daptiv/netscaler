@@ -74,61 +74,6 @@ action :create do
   new_resource.updated_by_last_action(c)
 end
 
-action :update do
-  u = update_resource(
-    resource_type = 'lbmonitor',
-    resource_id = :monitorname,
-    hostname = @new_resource.hostname,
-    username = @new_resource.username,
-    password = @new_resource.password,
-    monitorname: @new_resource.monitorname,
-    type: @new_resource.type,
-    interval: @new_resource.interval,
-    units3: @new_resource.units3,
-    resptimeout: @new_resource.resptimeout,
-    resptimeoutthresh: @new_resource.resptimeoutthresh,
-    units4: @new_resource.units4,
-    destport: @new_resource.destport,
-    downtime: @new_resource.downtime,
-    units2: @new_resource.units2,
-    deviation: @new_resource.deviation,
-    units1: @new_resource.units1,
-    retries: @new_resource.retriesx,
-    failureretries: @new_resource.failureretries,
-    alertretries: @new_resource.alertretries,
-    successretries: @new_resource.successretries,
-    lrtm: @new_resource.lrtm,
-    send: @new_resource.sendx,
-    recv: @new_resource.recv,
-    reverse: @new_resource.reverse,
-    transparent: @new_resource.transparent,
-    iptunnel: @new_resource.iptunnel,
-    tos: @new_resource.tos,
-    secure: @new_resource.secure,
-    validatecred: @new_resource.validatecred,
-    radnasip: @new_resource.radnasip,
-    radaccounttype: @new_resource.radaccounttype,
-    radframedip: @new_resource.radframedip,
-    lrtmconf: @new_resource.lrtmconf,
-    lrtmconfstr: @new_resource.lrtmconfstr,
-    dynamicresponsetimeout: @new_resource.dynamicresponsetimeout,
-    dynamicinterval: @new_resource.dynamicinterval,
-    dispatcherip: @new_resource.dispatcherip,
-    dispatcherport: @new_resource.dispatcherport,
-    simpethod: @new_resource.simpethod,
-    maxforwards: @new_resource.maxforwards,
-    snmpversion: @new_resource.snmpversion,
-    multimetrictable: @new_resource.multimetrictable,
-    storefrontacctservice: @new_resource.storefrontacctservice,
-    vendorid: @new_resource.vendorid,
-    firmwarerevision: @new_resource.firmwarerevision,
-    inbandsecurityid: @new_resource.inbandsecurityid,
-    dup_state: @new_resource.dup_state,
-    storeedb: @new_resource.storeedb
-  )
-  new_resource.updated_by_last_action(u)
-end
-
 # Delete action unsupported atm
 # Requires url that doesn't fit with delete_resource logic
 # ex: http://<netscaler_ip>/nitro/v1/config/lbmonitor?args=monitorname:<name>,type:<type>
