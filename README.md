@@ -16,13 +16,13 @@ Creating a new provider
 
 1.  Actions supported: 
   * :create - calls `create_resource`
-  * :update - calls `update_resource`
   * :delete - calls `delete_resource`
   * :bind   - calls `bind_resource`
 2.  Attributes in the payload should be passed in as a hash
-3.  `resource_type` should be the the feature that you're manipulating (ie server, lbvserver, etc)
-4.  `resource_id` should be set to the key of the resource (ie name, servicegroupname, etc)
-5.  Be carefull of chef reserved words.  If you look at the `netscaler_server` resource/provider
+3.  Add new row in payload_filter.rb for @@attribute_list_by_resource.  The array should contain keys from the payload that can not be updated via the Nitro Api.
+4.  `resource_type` should be the the feature that you're manipulating (ie server, lbvserver, etc)
+5.  `resource_id` should be set to the key of the resource (ie name, servicegroupname, etc)
+6.  Be carefull of chef reserved words.  If you look at the `netscaler_server` resource/provider
 you'll see I use the payload key as my attribute names for everthing except for `servername` which
 doesn't exist as a key for the `server` resource type.  The key in the options hash is still 'name'
 though.  The options hash key has to match the netscaler payload key.
@@ -115,6 +115,25 @@ A utility class used by Netscaler::Helper
   </tr>
 </table>
 
+Netscaler::PayloadFilter
+-----------------
+Filters out key/value params not allowed in the payload for updates.
+
+### Methods
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Vars</th>
+    <th>Description</th>
+  </tr>
+  <tr>
+    <td><tt>filter_uneditable_attributes</tt></td>
+    <td>resource_type, payload</td>
+    <td>remove attributes that can not be updated.</td>
+  </tr>
+</table>
+
 ### Examples
     # New netscaler instance
     netscalers = search(:node, "role:netscaler AND chef_environment:#{node.chef_environment}"
@@ -165,12 +184,11 @@ netscaler_server
 ----------------
 
 ### Actions
-- :create: Create a resource
-- :update: Update an existing resource
+- :create: Create a resource, updates if necessary
 - :delete: Delete an existing resource
 
 ### Examples
-    # Create a new server called StarLord
+    # Create a new server called StarLord, update if necessary
     netscaler_server "Create StarLord" do
       servername 'StarLord'
       hostname '123.45.123.1'
@@ -179,16 +197,6 @@ netscaler_server
       password 'iamgroot'
       domain 'mydomain.com'
       action :create
-    end
-
-    # Update a server called StarLord
-    netscaler_server 'Update StarLord' do
-      servername 'StarLord'
-      hostname '123.45.123.1'
-      domainresolveretry 22
-      username 'iamgroot'
-      password 'iamgroot'
-      action :update
     end
 
     # Delete a server called StarLord
@@ -204,8 +212,7 @@ netscaler_servicegroup
 ----------------------
 
 ### Actions
-- :create: Create a resource
-- :update: Update an existing resource
+- :create: Create a resource, updates if necessary
 - :delete: Delete an existing resource
 - :bind: Bind one resource to another
 
@@ -236,8 +243,7 @@ netscaler_monitor
 ----------------------
 
 ### Actions
-- :create: Create a resource
-- :update: Update an existing resource
+- :create: Create a resource, updates if necessary
 - :bind: Bind one resource to another
 
 ### Examples
@@ -265,8 +271,7 @@ netscaler_lbvserver
 ----------------------
 
 ### Actions
-- :create: Create a resource
-- :update: Update an existing resource
+- :create: Create a resource, updates if necessary
 - :delete: Delete an existing resource
 - :bind: Bind one resource to another
 

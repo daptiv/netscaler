@@ -33,11 +33,14 @@ module Netscaler
           binding: false,
           payload: payload
         )
-        response = request.execute()
+        request.execute
         ns.save_config
         ns.logout
         created = true
+      else
+        created = update_resource(resource_type, resource_id, hostname, username, password, payload) 
       end
+
       return created
     end
 
@@ -45,7 +48,7 @@ module Netscaler
       updated = false
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
-      payload_edited = payload.reject { |k, v| v.nil? }
+      payload_edited = Netscaler::PayloadFilter.filter_uneditable_attributes(resource_type, payload)
 
       if ns.resource_exists?(resource_type, payload[resource_id])
         update_required = false
@@ -61,7 +64,7 @@ module Netscaler
           resource: payload[resource_id],
           payload: payload_edited
         )
-        response = request.execute()
+        request.execute
         ns.save_config
         ns.logout
         updated = true
@@ -81,7 +84,7 @@ module Netscaler
           resource: payload[resource_id],
           payload: payload
         )
-        response = request.execute()
+        request.execute
         ns.save_config
         ns.logout
         deleted = true

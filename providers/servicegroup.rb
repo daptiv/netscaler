@@ -43,30 +43,6 @@ action :create do
   new_resource.updated_by_last_action(c)
 end
 
-action :update do
-  u = update_resource(
-    resource_type = 'servicegroup',
-    resource_id = :servicegroupname,
-    hostname = @new_resource.hostname,
-    username = @new_resource.username,
-    password = @new_resource.password,
-    servicegroupname: @new_resource.servicegroupname,
-    cip: @new_resource.cip,
-    cipheader: @new_resource.cipheader,
-    state: @new_resource.state,
-    servicetype: @new_resource.servicetype,
-    cacheable: @new_resource.cacheable,
-    td: @new_resource.td,
-    cachetype: @new_resource.cachetype,
-    autoscale: @new_resource.autoscale,
-    monstate: @new_resource.monstate,
-    healthmonitor: @new_resource.healthmonitor,
-    appflowlog: @new_resource.appflowlog,
-    comment: @new_resource.comment
-  )
-  new_resource.updated_by_last_action(u)
-end
-
 action :delete do
   d = delete_resource(
     resource_type = 'servicegroup',

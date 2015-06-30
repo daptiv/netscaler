@@ -38,25 +38,6 @@ action :create do
   new_resource.updated_by_last_action(c)
 end
 
-action :update do
-  u = update_resource(
-    resource_type = 'server',
-    resource_id = :name,
-    hostname = @new_resource.hostname,
-    username = @new_resource.username,
-    password = @new_resource.password,
-    name: @new_resource.servername,
-    state: @new_resource.state,
-    domain: @new_resource.domain,
-    ipaddress: @new_resource.ipaddress,
-    domainresolveretry: @new_resource.domainresolveretry,
-    translationip: @new_resource.translationip,
-    translationmask: @new_resource.translationmask,
-    comment: @new_resource.comment
-  )
-  new_resource.updated_by_last_action(u)
-end
-
 action :delete do
   d = delete_resource(
     resource_type = 'server',

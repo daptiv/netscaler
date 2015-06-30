@@ -37,21 +37,6 @@ action :create do
   new_resource.updated_by_last_action(c)
 end
 
-action :update do
-  u = update_resource(
-    resource_type = 'lbvserver',
-    resource_id = :name,
-    hostname = @new_resource.hostname,
-    username = @new_resource.username,
-    password = @new_resource.password,
-    name: @new_resource.lbvservername,
-    ipv46: @new_resource.ipaddress,
-    lbmethod: @new_resource.lbmethod,
-    comment: @new_resource.comment
-  )
-  new_resource.updated_by_last_action(u)
-end
-
 action :delete do
   d = delete_resource(
     resource_type = 'lbvserver',
