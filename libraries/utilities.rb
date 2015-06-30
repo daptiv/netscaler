@@ -165,11 +165,14 @@ module Netscaler
     end
 
     def save_config
+      tries ||= 3
       build_request(
         method: 'post',
         resource_type: 'nsconfig',
         payload: {}
-      ).execute()
+      ).execute
+    rescue RuntimeError
+      retry unless (tries -= 1).zero?
     end
 
     def logout
@@ -177,7 +180,7 @@ module Netscaler
         method: 'post',
         resource_type: 'logout',
         payload: {}
-      ).execute()
+      ).execute
     end
 
   end

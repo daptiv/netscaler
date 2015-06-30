@@ -33,8 +33,12 @@ module Netscaler
           binding: false,
           payload: payload
         )
-        request.execute
-        ns.save_config
+        begin
+          request.execute
+          ns.save_config
+        rescue Exception => e
+          fail e.inspect
+        end
         ns.logout
         created = true
       else
@@ -64,8 +68,12 @@ module Netscaler
           resource: payload[resource_id],
           payload: payload_edited
         )
-        request.execute
-        ns.save_config
+        begin
+          request.execute
+          ns.save_config
+        rescue Exception => e
+          fail e.inspect
+        end
         ns.logout
         updated = true
       end
