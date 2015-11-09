@@ -10,7 +10,7 @@ describe 'netscaler_resource' do
   end
 
   let(:runner) do
-    ChefSpec::Runner.new(
+    ChefSpec::ServerRunner.new(
       :cookbook_path => cookbook_paths,
       :step_into => ['netscaler_server']
     )
@@ -30,31 +30,31 @@ describe 'netscaler_resource' do
 
   describe '#new' do
     it 'takes a hash and returns a Netscaler::Utilities object' do
-      @ns.should be_an_instance_of Netscaler::Utilities
+      expect(@ns).to be_an_instance_of Netscaler::Utilities
     end
   end
 
   describe '#hostname' do
     it 'returns the correct hostname' do
-      @ns.hostname.should eql 'host'
+      expect(@ns.hostname).to eql 'host'
     end
   end
 
   describe '#username' do
     it 'returns the correct username' do
-      @ns.username.should eql 'user'
+      expect(@ns.username).to eql 'user'
     end
   end
 
   describe '#password' do
     it 'returns the correct password' do
-      @ns.password.should eql 'pass'
+      expect(@ns.password).to eql 'pass'
     end
   end
 
   describe '#find_primary' do
     it 'responds to the find_primary method' do
-      @ns.should respond_to(:find_primary)
+      expect(@ns).to respond_to(:find_primary)
     end
     xit 'returns the primary hostname' do
     end
@@ -64,7 +64,7 @@ describe 'netscaler_resource' do
 
   describe '#resource_exists?' do
     it 'responds to resource_exists?' do
-      @ns.should respond_to(:resource_exists?)
+      expect(@ns).to respond_to(:resource_exists?)
     end
     xit 'confirms a resource exists' do
     end
@@ -74,14 +74,14 @@ describe 'netscaler_resource' do
 
   describe '#build_url' do
     before do
-      Method = 'post'
+      @method = 'post'
       payload = {}
-      Base_url = 'http://123.45.67.890/nitro/v1/config'
+      @base_url = 'http://123.45.67.890/nitro/v1/config'
     end
 
     context 'when the method is called' do
       it 'responds to build_url' do
-        @ns.should respond_to(:build_url)
+        expect(@ns).to respond_to(:build_url)
       end
       it 'returns a string' do
         expect(@ns.build_url(1,2,3,4,5,6)).to be_a(String)
@@ -91,14 +91,14 @@ describe 'netscaler_resource' do
     context 'when save_config calls it' do
       it 'returns the correct url' do
         expect(@ns.build_url(
-          Method,
+          @method,
           @primary_hostname,
           'nsconfig',
           'server',
           'StarLord',
           'false'
         )).to include(
-          "#{Base_url}/nsconfig?action=save"
+          "#{@base_url}/nsconfig?action=save"
         )
       end
     end
@@ -113,7 +113,7 @@ describe 'netscaler_resource' do
           'Guardians',
           'true'
         )).to include(
-          "#{Base_url}/servicegroup_servicegroupmember_binding/StarLord/Guardians"
+          "#{@base_url}/servicegroup_servicegroupmember_binding/StarLord/Guardians"
         )
       end
       it 'retruns the correct url with put method' do
@@ -125,7 +125,7 @@ describe 'netscaler_resource' do
           'Guardians',
           'true'
         )).to include(
-          "#{Base_url}/servicegroup_servicegroupmember_binding/StarLord?action=bind"
+          "#{@base_url}/servicegroup_servicegroupmember_binding/StarLord?action=bind"
         )
       end
     end
@@ -133,7 +133,7 @@ describe 'netscaler_resource' do
 
   describe '#build_request' do
     it 'responds to build_request' do
-      @ns.should respond_to(:build_request)
+      expect(@ns).to respond_to(:build_request)
     end
     xit 'returns a string' do
     end
@@ -141,7 +141,7 @@ describe 'netscaler_resource' do
 
   describe '#create_resource' do
     it 'responds to create_resource' do
-      Netscaler::Helper.should respond_to(:create_resource)
+      expect(Netscaler::Helper).to respond_to(:create_resource)
     end
     xit 'creates a resource' do
     end
@@ -149,7 +149,7 @@ describe 'netscaler_resource' do
 
   describe '#update_resource' do
     it 'responds to update_resource' do
-      Netscaler::Helper.should respond_to(:update_resource)
+      expect(Netscaler::Helper).to respond_to(:update_resource)
     end
     xit 'updates a resource' do
     end
@@ -157,7 +157,7 @@ describe 'netscaler_resource' do
 
   describe '#delete_resource' do
     xit 'responds to delete_resource' do
-      Netscaler::Helper.should respond_to(:delete_resource)
+      expect(Netscaler::Helper).to respond_to(:delete_resource)
     end
     xit 'deletes a resource' do
     end
@@ -165,7 +165,7 @@ describe 'netscaler_resource' do
 
   describe '#bind_resource' do
     it 'responds to bind_resource' do
-      Netscaler::Helper.should respond_to(:bind_resource)
+      expect(Netscaler::Helper).to respond_to(:bind_resource)
     end
     xit 'binds a resource' do
     end

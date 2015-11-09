@@ -11,7 +11,6 @@ Dir['libraries/*.rb'].each { |f| require File.expand_path(f) }
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
-  config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
 
@@ -23,6 +22,6 @@ RSpec.configure do |config|
 
   # Select the Fauxhai template to load
   config.platform = 'ubuntu'
-  config.version = '12.04'
+  config.version = '14.04'
 
 end

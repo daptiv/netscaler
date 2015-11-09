@@ -1,6 +1,5 @@
 require 'foodcritic'
 require 'rspec/core/rake_task'
-require 'daptiv-chef-ci/vagrant_task'
 
 task :default => [:version, :rubocop, :foodcritic, :spec]
 
@@ -20,5 +19,3 @@ RSpec::Core::RakeTask.new do |task|
   task.pattern = 'spec/**/*_spec.rb'
   task.rspec_opts = ['--color', '-f documentation', '-tunit']
 end
-
-Vagrant::RakeTask.new
