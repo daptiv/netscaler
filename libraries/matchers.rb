@@ -1,8 +1,4 @@
 if defined?(ChefSpec)
-  ChefSpec::Runner.define_runner_method :netscaler_server
-  ChefSpec::Runner.define_runner_method :netscaler_servicegroup
-  ChefSpec::Runner.define_runner_method :netscaler_monitor
-
   def create_netscaler_server(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:netscaler_server, :create, resource_name)
   end

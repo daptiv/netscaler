@@ -16,11 +16,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
 begin
-  gem 'rest-client'
+  gem 'rest_client'
 rescue LoadError
-  system('gem install rest-client --no-document')
+  system('gem install rest_client -v 1.8.3 --no-document')
   Gem.clear_paths
 end
 
