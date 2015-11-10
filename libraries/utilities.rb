@@ -17,20 +17,21 @@
 # limitations under the License.
 #
 
-begin
-  gem 'rest-client'
-rescue LoadError
-  system('gem install rest-client --no-document')
-  Gem.clear_paths
-end
-
-require 'rest-client'
 require 'json'
 
 module Netscaler
   class Utilities
 
     attr_accessor :hostname, :username, :password
+
+    def self.included(_klass)
+      require 'rest-client'
+    rescue LoadError
+      chef_gem 'rest-client' do
+        compile_time true
+      end
+      require 'rest-client'
+    end
 
     def initialize(options)
       @hostname = options[:hostname]
