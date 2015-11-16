@@ -23,7 +23,7 @@ rescue LoadError
   Gem.clear_paths
 end
 
-require 'rest-client'
+require 'rest_client'
 require 'json'
 
 module Netscaler

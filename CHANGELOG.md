@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 1.0.1
+- Hotfix: Should require `rest_client` gem, not `rest-client` gem
+
 ## 1.0.0
 - Feature: Chef 12 ecosystem support (kitchen, chef spec, chef version)
 
