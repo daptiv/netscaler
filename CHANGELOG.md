@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 1.0.2
+- Hotfix: Should require gem inside methods for later loading
+
 ## 1.0.1
 - Hotfix: Should require `rest_client` gem, not `rest-client` gem
 

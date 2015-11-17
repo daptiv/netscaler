@@ -16,14 +16,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-begin
-  gem 'rest_client'
-rescue LoadError
-  system('gem install rest_client -v 1.8.3 --no-document')
-  Gem.clear_paths
-end
 
-require 'rest_client'
 require 'json'
 
 module Netscaler
@@ -38,6 +31,7 @@ module Netscaler
     end
 
     def resource_exists?(resource_type, resource)
+      require 'rest_client'
       begin
         request = build_request(
           method: 'get',
@@ -45,10 +39,10 @@ module Netscaler
           resource: resource
         )
         response = request.execute()
-      rescue RestClient::ResourceNotFound
+      rescue ::RestClient::ResourceNotFound
         Chef::Log.info "Resource #{ resource } not found in Netscaler"
         return false
-      rescue RestClient::Unauthorized
+      rescue ::RestClient::Unauthorized
         Chef::Log.error 'Netscaler refused credentials'
       rescue SocketError
         Chef::Application.fatal! "Couldn't connect to Netscaler at #{@hostname}"
@@ -60,6 +54,7 @@ module Netscaler
     end
 
     def key_value_exists?(resource_type, resource, key=nil, value=nil)
+      require 'rest_client'
       begin
         request = build_request(
           method: 'get',
@@ -67,10 +62,10 @@ module Netscaler
           resource: resource
         )
         response = request.execute()
-      rescue RestClient::ResourceNotFound
+      rescue ::RestClient::ResourceNotFound
         Chef::Log.info "Resource #{ resource } not found in Netscaler"
         return false
-      rescue RestClient::Unauthorized
+      rescue ::RestClient::Unauthorized
         Chef::Log.error 'Netscaler refused credentials'
       rescue SocketError
         Chef::Application.fatal! "Couldn't connect to Netscaler at #{@hostname}"
@@ -89,6 +84,8 @@ module Netscaler
     end
 
     def build_request(options = {})
+      require 'rest_client'
+      #require 'json'
       method = options[:method]
       resource_type = options[:resource_type]
       resource = options[:resource]
@@ -106,7 +103,7 @@ module Netscaler
           :content_type => "application/vnd.com.citrix.netscaler.#{resource_type}+json",
           :accept => :json }
       end
-      request = RestClient::Request.new(
+      request = ::RestClient::Request.new(
         :method => method,
         :url => url,
         :user => @username,
@@ -133,6 +130,7 @@ module Netscaler
     end
 
     def find_primary
+      require 'rest_client'
       resp = nil
       hostname = if @hostname.kind_of? Array
         @hostname
@@ -142,7 +140,7 @@ module Netscaler
       hostname.each do |name|
         Chef::Log.info "Attempting to connect to #{name}..."
         begin
-          resp = RestClient::Request.new(
+          resp = ::RestClient::Request.new(
             :method => 'get',
             :url => "http://#{name}/nitro/v1/config/hanode",
             :user => @username,
