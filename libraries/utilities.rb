@@ -31,7 +31,7 @@ module Netscaler
     end
 
     def resource_exists?(resource_type, resource)
-      require 'rest_client'
+      require 'rest-client'
       begin
         request = build_request(
           method: 'get',
@@ -54,7 +54,7 @@ module Netscaler
     end
 
     def key_value_exists?(resource_type, resource, key=nil, value=nil)
-      require 'rest_client'
+      require 'rest-client'
       begin
         request = build_request(
           method: 'get',
@@ -84,7 +84,7 @@ module Netscaler
     end
 
     def build_request(options = {})
-      require 'rest_client'
+      require 'rest-client'
       #require 'json'
       method = options[:method]
       resource_type = options[:resource_type]
@@ -130,7 +130,7 @@ module Netscaler
     end
 
     def find_primary
-      require 'rest_client'
+      require 'rest-client'
       resp = nil
       hostname = if @hostname.kind_of? Array
         @hostname

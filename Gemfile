@@ -12,7 +12,7 @@ gem 'rake'
 gem 'berkshelf'
 gem 'minitest-chef-handler'
 gem 'json'
-gem 'rest_client'
+gem 'rest-client', '= 1.7'
 
 group :development do
   gem 'test-kitchen'

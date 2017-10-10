@@ -20,10 +20,10 @@
 require 'mixlib/shellout'
 
 begin
-  gem 'rest_client'
+  gem 'rest-client'
 rescue LoadError
   gem_exe = Chef::File.join(RbConfig::CONFIG['bindir'], 'gem').sub(/.*\s.*/m, '"\&"')
-  Mixlib::ShellOut.new("#{gem_exe} install rest_client --no-document").run_command
+  Mixlib::ShellOut.new("#{gem_exe} install rest-client -v 1.7 --no-document").run_command
   Gem.clear_paths
 end
 
@@ -112,7 +112,7 @@ module Netscaler
 
     def bind_resource(resource_type, resource_id, bind_type, bind_type_id, bindto_key, bindto_id,
       hostname, username, password, payload = {})
-      require 'rest_client'
+      require 'rest-client'
       ns = Netscaler::Utilities.new(:hostname => hostname, :username => username,
         :password => password)
 
