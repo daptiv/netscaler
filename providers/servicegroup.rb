@@ -36,6 +36,7 @@ action :create do
     cachetype: @new_resource.cachetype,
     autoscale: @new_resource.autoscale,
     monstate: @new_resource.monstate,
+    monthreshold: @new_resource.monthreshold,
     healthmonitor: @new_resource.healthmonitor,
     appflowlog: @new_resource.appflowlog,
     comment: @new_resource.comment
