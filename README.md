@@ -40,28 +40,11 @@ A collection of methods for CRUD operations on NetScaler
 
 ### Methods
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Vars</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><tt>create_resource</tt></td>
-    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
-    <td>Make a post call to the netscaler</td>
-  </tr>
-  <tr>
-    <td><tt>update_resource</tt></td>
-    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
-    <td>Make a put call to the netscaler</td>
-  </tr>
-  <tr>
-    <td><tt>delete_resource</tt></td>
-    <td>resource_type, resource_id, hostname, username, password, payload = {}</td>
-    <td>Make a delete call to the netscaler</td>
-  </tr>
-</table>
+| Name | Vars | Description |
+|------|------|-------------|
+| create_resource | resource_type, resource_id, hostname, username, password, payload = {} | Make a post call to the netscaler |
+| update_resource | resource_type, resource_id, hostname, username, password, payload = {} | Make a put call to the netscaler |
+| delete_resource | resource_type, resource_id, hostname, username, password, payload = {} | Make a delete call to the netscaler |
 
 Library Classes
 ===============
@@ -72,48 +55,15 @@ A utility class used by Netscaler::Helper
 
 ### Methods
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Vars</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><tt>resource_exists?</tt></td>
-    <td>resource_type, resource</td>
-    <td>Check if a resource exists</td>
-  </tr>
-  <tr>
-    <td><tt>key_value_exists?</tt></td>
-    <td>resource_type, resource, key, value</td>
-    <td>Check if a key/value exists</td>
-  </tr>
-  <tr>
-    <td><tt>build_request</tt></td>
-    <td>method, resource_type, resource, options</td>
-    <td>Create the rest call</td>
-  </tr>
-  <tr>
-    <td><tt>build_url</tt></td>
-    <td>method, primary_hostname, resource_type, resource, resource_id, binding</td>
-    <td>Create the url used for the rest call</td>
-  </tr>
-  <tr>
-    <td><tt>find_primary</tt></td>
-    <td>method, resource_type, resource, resource_id, binding, payload</tc>
-    <td>Given an array of options, find the primary Netscaler</td>
-  </tr>
-  <tr>
-    <td><tt>save_config</tt></td>
-    <td></tc>
-    <td>Save the netscaler configuration</td>
-  </tr>
-  <tr>
-    <td><tt>logout</tt></td>
-    <td></tc>
-    <td>Log out of the netscaler</td>
-  </tr>
-</table>
+| Name | Vars | Description |
+|------|------|-------------|
+| resource_exists? | resource_type, resource | Check if a resource exists |
+| key_value_exists? | resource_type, resource, key, value | Check if a key/value exists |
+| build_request | method, resource_type, resource, options | Create the rest call |
+| build_url | method, primary_hostname, resource_type, resource, resource_id, binding | Create the url used for the rest call |
+| find_primary | method, resource_type, resource, resource_id, binding, payload | Given an array of options, find the primary Netscaler |
+| save_config | | Save the netscaler configuration |
+| logout | | Log out of the netscaler |
 
 Netscaler::PayloadFilter
 -----------------
@@ -121,18 +71,9 @@ Filters out key/value params not allowed in the payload for updates.
 
 ### Methods
 
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Vars</th>
-    <th>Description</th>
-  </tr>
-  <tr>
-    <td><tt>filter_uneditable_attributes</tt></td>
-    <td>resource_type, payload</td>
-    <td>remove attributes that can not be updated.</td>
-  </tr>
-</table>
+| Name | Vars | Description |
+|------|------|-------------|
+| filter_uneditable_attributes | resource_type, payload | remove attributes that can not be updated. |
 
 ### Examples
     # New netscaler instance
@@ -320,4 +261,4 @@ netscaler_lbvserver
 
 ## License and Authors
 
-Author:: Daptiv Engineering (dl_teamengineering@daptiv.com)
+Author:: Changepoint Engineering (cpc_sea_teamengineering@changepoint.com) 
