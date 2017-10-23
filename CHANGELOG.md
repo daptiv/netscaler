@@ -2,6 +2,9 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 1.0.4
+- Add: new `monthreshold` option for the payload.
+
 ## 1.0.3
 - Hotfix: `rest_client` gem removed from rubygems.org, use `rest-client` gem
 

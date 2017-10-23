@@ -41,3 +41,4 @@ attribute :customserverid, :kind_of => String, :required => false, :default => n
 attribute :hashid, :kind_of => String, :required => false, :default => nil
 attribute :cip, :kind_of => String, :required => false, :default => nil
 attribute :cipheader, :kind_of => String, :required => false, :default => nil
+attribute :monthreshold, :kind_of => String, :required => false, :default => nil
