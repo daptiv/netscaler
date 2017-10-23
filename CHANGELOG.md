@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of netscaler.
 
+## 1.0.5
+- README table syntax updated.
+- Cookbook quality updates.
+
 ## 1.0.4
 - Add: new `monthreshold` option for the payload.
 
